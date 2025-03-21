@@ -239,7 +239,7 @@ const Sessions = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className=" min-h-screen">
       <Sidebar />
       <div className="ml-16 md:ml-[250px] p-6">
         <h1 className="text-2xl text-indigo-500 font-semibold">My Sessions</h1>
