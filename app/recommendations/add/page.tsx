@@ -89,13 +89,13 @@ const AddRecommendationPage = () => {
               className="px-5 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
               onClick={handleCancel}
             >
-              Previous
+              Cancel
             </button>
             <button 
               className="px-5 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition"
               onClick={handleSave}
             >
-              Next
+             Recommend
             </button>
           </div>
         </div>

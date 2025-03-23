@@ -35,21 +35,14 @@ const RecommendationCard = ({ rec }: { rec: recommendations }) => {
       <div className="flex items-center justify-between mt-2 pt-2 border-t border-indigo-100">
         <div className="flex gap-4 text-gray-600 text-sm font-medium">
           <div className="flex items-center gap-1 bg-gray-50 py-1 px-3 rounded-full">
-            <BiUser className="text-lg text-indigo-400" /> {rec.age}
+            <BiUser className="text-lg text-indigo-400" /> {rec.age} Years Old
           </div>
           <div className="flex items-center gap-1 bg-gray-50 py-1 px-3 rounded-full">
             <BiCalendar className="text-lg text-indigo-400" /> {rec.date}
           </div>
         </div>
         
-        <div className="flex gap-3">
-          <button className="bg-indigo-100 p-2 rounded-full text-indigo-500 hover:bg-indigo-200 transition-colors">
-            <BiEdit className="text-lg" />
-          </button>
-          <button className="bg-red-100 p-2 rounded-full text-red-500 hover:bg-red-200 transition-colors">
-            <BiTrash className="text-lg" />
-          </button>
-        </div>
+        
       </div>
     </div>
   );

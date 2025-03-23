@@ -23,7 +23,7 @@ const Sidebar = () => {
       </button>
 
       <nav className="flex flex-col gap-6">
-        <SidebarItem icon={<FaHome />} label="Login" isOpen={isOpen} route="/" />
+      
         <SidebarItem icon={<FaHome />} label="Dashboard" isOpen={isOpen} route="/dashboard" />
 
         <SidebarItem icon={<FaCalendarAlt />} label="Sessions" isOpen={isOpen} route="/sessions" />

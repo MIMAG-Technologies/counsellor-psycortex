@@ -181,7 +181,7 @@ const Dashboard = () => {
 
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
     {/* Video Sessions */}
-    <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+    <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-500">
     <div className="flex justify-between items-center mb-4">
       <span className="text-gray-800 text-xl">Video Calls</span>
       <div className="bg-purple-50 p-2 rounded-lg">
@@ -193,7 +193,7 @@ const Dashboard = () => {
   </div>
 
   {/* Chat Sessions */}
-  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-500">
     <div className="flex justify-between items-center mb-4">
       <span className="text-gray-800 text-xl">Chat Interactions</span>
       <div className="bg-purple-50 p-2 rounded-lg">
@@ -205,7 +205,7 @@ const Dashboard = () => {
   </div>
 
   {/* Phone Sessions */}
-  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-500">
     <div className="flex justify-between items-center mb-4">
       <span className="text-gray-800 text-xl">Phone Calls</span>
       <div className="bg-purple-50 p-2 rounded-lg">
@@ -217,7 +217,7 @@ const Dashboard = () => {
   </div>
 
   {/* Offline Sessions */}
-  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-500">
     <div className="flex justify-between items-center mb-4">
       <span className="text-gray-800 text-xl">In-Person Meetings</span>
       <div className="bg-purple-50 p-2 rounded-lg">

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/sidebar/page";
 import Loader from "../components/loader";
-import { FaVideo } from "react-icons/fa"
+import { FaCalendar, FaVideo } from "react-icons/fa"
 import { FaMessage } from "react-icons/fa6";
 
 interface User {
@@ -147,7 +147,7 @@ const Sessions = () => {
       <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
         <div className="bg-indigo-50 p-3 flex justify-between items-center border-b border-indigo-100">
           <div className="flex items-center">
-            <span className="text-indigo-500 mr-2">📅</span>
+            <span className="text-indigo-500 mr-2"><FaCalendar/></span>
             <span className="text-gray-700 font-medium text-sm">{formattedDate} at {formattedTime}</span>
           </div>
           <span className="bg-indigo-500 text-white px-2.5 py-0.5 rounded-full text-xs font-medium">
