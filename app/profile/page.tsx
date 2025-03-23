@@ -5,13 +5,11 @@ import { useState, useEffect } from "react";
 import fetchProfile from "../utils/profile";
 import { CounsellorData } from "../types/profile/profile";
 import { MdEmail, MdPhone, MdPerson, MdEdit } from "react-icons/md";
-import { FaBriefcase, FaClock, FaVideo } from "react-icons/fa";
-import { FaCalendar } from "react-icons/fa";
-import { FiPhone } from "react-icons/fi";
-import { BsChatDots } from "react-icons/bs";
-import {MdVideocam} from "react-icons/md";
+import { FaBriefcase, FaClock, } from "react-icons/fa";
 
-import { FaDollarSign } from "react-icons/fa";
+import { BsChatDots } from "react-icons/bs";
+
+
 
 const Profile = () => {
   const [profile, setProfile] = useState<CounsellorData | null>(null);
@@ -171,7 +169,7 @@ const Profile = () => {
         Education
       </h3>
       <div className="space-y-3 mt-4">
-        {profile?.professionalInfo?.education?.length > 0 ? (
+        {profile?.professionalInfo?.education && profile.professionalInfo.education.length > 0 ? (
           profile.professionalInfo.education.map((edu, index) => (
             <div key={index} className="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
               <div className="bg-indigo-500 text-white px-3 py-1 rounded-lg text-sm">{edu.year}</div>
@@ -204,9 +202,9 @@ const Profile = () => {
       Licenses & Certifications
     </h3>
     
-    {profile?.professionalInfo?.licenses?.length > 0 ? (
+    {profile?.professionalInfo?.licenses?.length ?? 0 > 0 ? (
       <div className="space-y-3 mt-4">
-        {profile.professionalInfo.licenses.map((info, index) => (
+        {profile?.professionalInfo?.licenses.map((info, index) => (
           <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-300">
             {/* License Header */}
             <div className="flex justify-between items-center mb-3">
@@ -261,8 +259,8 @@ const Profile = () => {
           Specialties
         </h2>
         <div className="flex flex-wrap gap-2 mt-3">
-          {profile?.practiceInfo?.specialties?.length > 0 ? (
-            profile.practiceInfo.specialties.map((specialty, index) => (
+          {profile?.practiceInfo?.specialties?.length ?? 0 > 0 ? (
+            profile?.practiceInfo.specialties.map((specialty, index) => (
               <span
                 key={index}
                 className="bg-white text-indigo-500 px-3 py-1 rounded-full text-sm shadow-md"
@@ -285,8 +283,8 @@ const Profile = () => {
           Languages
         </h2>
         <div className="space-y-2 mt-3">
-          {profile?.practiceInfo?.languages?.length > 0 ? (
-            profile.practiceInfo.languages.map((lang, index) => (
+          {profile?.practiceInfo?.languages && profile.practiceInfo.languages.length > 0 ? (
+            profile?.practiceInfo.languages.map((lang, index) => (
               <div
                 key={index}
                 className="bg-white p-3 rounded-lg flex justify-between items-center shadow-md"
