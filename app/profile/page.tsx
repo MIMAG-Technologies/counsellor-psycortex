@@ -4,10 +4,13 @@ import Sidebar from "../components/sidebar/page";
 import { useState, useEffect } from "react";
 import fetchProfile from "../utils/profile";
 import { CounsellorData } from "../types/profile/profile";
-import { MdEmail, MdPhone, MdPerson, MdEdit } from "react-icons/md";
-import { FaBriefcase, FaClock, } from "react-icons/fa";
-
+import { MdEmail, MdPerson, MdEdit } from "react-icons/md";
+import { FaBriefcase, FaClock, FaDollarSign, FaStethoscope, } from "react-icons/fa";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import { MdEventNote } from "react-icons/md";
+import { MdChat, MdVideoCall, MdPhone } from "react-icons/md"
 import { BsChatDots } from "react-icons/bs";
+import Loader from "../components/loader";
 
 
 
@@ -38,18 +41,7 @@ const Profile = () => {
           <h1 className="text-indigo-500 font-bold text-3xl mb-8">My Profile</h1>
 
           {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-pulse flex space-x-4">
-                <div className="rounded-full bg-slate-200 h-16 w-16"></div>
-                <div className="flex-1 space-y-4 py-1">
-                  <div className="h-4 bg-slate-200 rounded w-3/4"></div>
-                  <div className="space-y-2">
-                    <div className="h-4 bg-slate-200 rounded"></div>
-                    <div className="h-4 bg-slate-200 rounded w-5/6"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Loader/>
           ) : (
             <div className="flex flex-col gap-6">
               {/* Top Section: Profile Card & About Me */}
@@ -190,12 +182,12 @@ const Profile = () => {
 </div>
 
 
-              {/* Licenses & Certifications */}
-              <div className="bg-white border-l-4 border-purple-500 rounded-xl shadow-md overflow-hidden mt-5">
+    {/* Licenses & Certifications */}
+  <div className="bg-white border-l-4 border-purple-500 rounded-xl shadow-md overflow-hidden mt-5">
   <div className="p-6">
-    <h3 className="text-lg font-semibold text-indigo-500 mb-4 flex items-center">
+    <h3 className=" font-semibold text-xl text-indigo-500 mb-4 flex items-center">
       <span className="bg-purple-100 p-2 rounded-lg mr-3">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-xl text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       </span>
@@ -216,21 +208,21 @@ const Profile = () => {
                 </span>
                 <h3 className="font-medium text-blue-600">{info.licenseTitle}</h3>
               </div>
-              <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-medium">
+              <span className="bg-blue-100 text-green-600 px-3 py-1 rounded-full text-lg font-medium">
                 Valid
               </span>
             </div>
             
             {/* License Details */}
-            <div className="grid grid-cols-2 gap-y-2 bg-blue-50 p-3 rounded-lg">
-              <div className="text-gray-600 text-sm">License Number</div>
-              <div className="font-medium text-blue-600 text-sm">{info.licenseNumber}</div>
+            <div className="grid grid-cols-2 gap-y-2 bg--gray-100 p-3 rounded-lg">
+              <div className="text-gray-700  text-lg">License Number</div>
+              <div className="text-lg text-blue-600 ">{info.licenseNumber}</div>
               
-              <div className="text-gray-600 text-sm">Issuing Authority</div>
-              <div className="font-medium text-blue-600 text-sm">{info.issuingAuthority}</div>
+              <div className="text-gray-700 text-lg">Issuing Authority</div>
+              <div className=" text-blue-600 text-lg">{info.issuingAuthority}</div>
               
-              <div className="text-gray-600 text-sm">Valid Until</div>
-              <div className="font-medium text-blue-600 text-sm">{info.validUntil}</div>
+              <div className="text-gray-700 text-lg">Valid Until</div>
+              <div className=" text-blue-600 text-lg">{info.validUntil}</div>
             </div>
           </div>
         ))}
@@ -241,12 +233,12 @@ const Profile = () => {
       </div>
     )}
   </div>
-              </div>
+  </div>
 
 
-            <div className="mt-8">
-            <h1 className="text-2xl text-indigo-500 font-medium flex items-center gap-2 pb-2 border-b border-gray-200">
-            <span>🏥</span>
+          <div className="mt-8">
+            <h1 className="text-xl text-indigo-500 font-semibold flex items-center gap-2 pb-2 border-b border-gray-200">
+            <span><FaStethoscope/></span>
             Practice Details
             </h1>
 
@@ -254,8 +246,8 @@ const Profile = () => {
           <div className="grid grid-cols-2 gap-6">
           {/* Specialties Section */}
           <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-indigo-500 font-medium flex items-center gap-2">
-          <span>🩺</span>
+        <h2 className="text-indigo-500 text-xl flex items-center gap-2">
+          <span><FaStethoscope/></span>
           Specialties
         </h2>
         <div className="flex flex-wrap gap-2 mt-3">
@@ -263,7 +255,7 @@ const Profile = () => {
             profile?.practiceInfo.specialties.map((specialty, index) => (
               <span
                 key={index}
-                className="bg-white text-indigo-500 px-3 py-1 rounded-full text-sm shadow-md"
+                className="bg-white text-indigo-500 px-3 py-1 rounded-full text-lg shadow-md"
               >
                 {specialty}
               </span>
@@ -278,7 +270,7 @@ const Profile = () => {
 
       {/* Languages Section */}
       <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-indigo-500 font-medium flex items-center gap-2">
+        <h2 className="text-indigo-500 text-xl flex items-center gap-2">
           <span>🌍</span>
           Languages
         </h2>
@@ -293,7 +285,7 @@ const Profile = () => {
                   <span>🌐</span>
                   <span className="text-indigo-500 text-sm">{lang.language}</span>
                 </div>
-                <span className="bg-purple-200 text-purple-700 px-2 py-1 rounded-full text-xs">
+                <span className="bg-purple-200 text-purple-700 px-2 py-1 rounded-full text-lg">
                   {lang.proficiencyLevel}
                 </span>
               </div>
@@ -311,23 +303,25 @@ const Profile = () => {
 
 
 
-  <div className="grid grid-cols-2 gap-5">
-  {/* Session Information */}
+  <div className="grid grid-cols-2 gap-6">
+  {/* Session Information (Left) */}
   <div className="bg-white border-l-4 border-purple-500 rounded-xl shadow-md overflow-hidden">
     <div className="p-6">
-      <h3 className="text-lg font-semibold text-indigo-500 mb-4 flex items-center">
-        <span className="bg-purple-100 p-2 rounded-lg mr-3">📅</span>
+      <h3 className="text-xl font-semibold text-indigo-500 mb-4 flex items-center">
+        <span className="bg-purple-100 p-3 rounded-lg mr-3">
+          <MdEventNote className="text-purple-500 text-2xl" />
+        </span>
         Session Information
       </h3>
 
       {/* Time Zone */}
-      <div className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center">
-        <div className="bg-indigo-500 text-white px-3 py-1 rounded-lg text-sm">
-          ⏰
+      <div className="bg-gray-50 p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center">
+        <div className="bg-indigo-500 text-white p-3 rounded-lg">
+          <AiOutlineClockCircle className="text-2xl" />
         </div>
         <div className="ml-4">
-          <h3 className="text-indigo-600 text-base">Time Zone</h3>
-          <p className="text-gray-600 text-sm">
+          <h3 className="text-indigo-600 text-lg font-medium">Time Zone</h3>
+          <p className="text-gray-700 text-base">
             {profile?.sessionInfo?.availability?.timeZone || "Not Available"}
           </p>
         </div>
@@ -335,32 +329,36 @@ const Profile = () => {
     </div>
   </div>
 
-  {/* Communication Modes */}
+  {/* Communication Modes (Right) */}
   <div className="bg-white border-l-4 border-purple-500 rounded-xl shadow-md overflow-hidden">
     <div className="p-6">
-      <h3 className="text-lg font-semibold text-indigo-500 mb-4 flex items-center">
-        <span className="bg-purple-100 p-2 rounded-lg mr-3">📞</span>
+      <h3 className="text-xl font-semibold text-indigo-500 mb-4 flex items-center">
+        <span className="bg-purple-100 p-3 rounded-lg mr-3">
+          <MdPhone className="text-purple-500 text-2xl" />
+        </span>
         Communication Modes
       </h3>
 
-      <div className="space-y-3 mt-4">
-        <div className="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
-          <div className="bg-indigo-500 text-white px-3 py-1 rounded-lg text-sm">
-            💬
+      <div className="space-y-4 mt-4">
+        {/* Chat Mode */}
+        <div className="flex items-center bg-gray-50 p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-indigo-500 text-white p-3 rounded-lg">
+            <MdChat className="text-2xl" />
           </div>
           <div className="ml-4">
-            <h3 className="text-indigo-600 text-base">Chat</h3>
-            <p className="text-gray-600 text-sm">Available for text communication</p>
+            <h3 className="text-indigo-600 text-lg font-medium">Chat</h3>
+            <p className="text-gray-700 text-base">Available for text communication</p>
           </div>
         </div>
 
-        <div className="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
-          <div className="bg-indigo-500 text-white px-3 py-1 rounded-lg text-sm">
-            🎥
+        {/* Video Mode */}
+        <div className="flex items-center bg-gray-50 p-5 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="bg-indigo-500 text-white p-3 rounded-lg">
+            <MdVideoCall className="text-2xl" />
           </div>
           <div className="ml-4">
-            <h3 className="text-indigo-600 text-base">Video</h3>
-            <p className="text-gray-600 text-sm">Available for video calls</p>
+            <h3 className="text-indigo-600 text-lg font-medium">Video</h3>
+            <p className="text-gray-700 text-base">Available for video calls</p>
           </div>
         </div>
       </div>
@@ -370,34 +368,40 @@ const Profile = () => {
 
 
 {/* Session Rates */}
-<div className="mt-8">
-  <h1 className="text-2xl text-indigo-500 font-semibold flex items-center gap-3 pb-3 border-b-2 border-purple-500">
-    <span className="text-3xl">💰</span>
+<div className="mt-2">
+  <h1 className="text-xl text-indigo-500 font-semibold flex items-center gap-3 pb-3 border-b-2 border-purple-500">
+    <span className="text-xl"><FaDollarSign/></span>
     Session Rates
   </h1>
 
-  <div className="bg-white border-l-4 border-purple-500 rounded-xl shadow-lg mt-5 overflow-hidden">
-    <div className="bg-indigo-500 text-white p-4 text-lg font-semibold">
-      Comprehensive Counselling Session
+  <div className="bg-white rounded-xl shadow-xl mt-3 overflow-hidden border border-gray-200">
+  {/* Header Section */}
+  <div className="bg-purple-600 text-white py-4 px-6 text-lg font-bold flex justify-between items-center">
+    <span>Comprehensive Counselling Session</span>
+  </div>
+
+  {/* Content Section */}
+  <div className="p-6 space-y-5">
+    {/* Time Zone */}
+    <div className="flex items-center bg-gray-100 p-4 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+      <div className="bg-purple-500 text-white p-3 rounded-lg">
+        <FaClock className="text-xl" />
+      </div>
+      <span className="text-indigo-700 text-base font-medium ml-4">
+        {profile?.sessionInfo?.availability?.timeZone || "Not Available"}
+      </span>
     </div>
 
-    <div className="p-5 space-y-4">
-      {/* Time Zone */}
-      <div className="flex items-center text-indigo-500">
-        <FaClock className="text-purple-500 text-lg" />
-        <span className="text-sm ml-3">{profile?.sessionInfo?.availability?.timeZone || "Not Available"}</span>
-      </div>
-
-      {/* Availability */}
-      <div>
-        <h3 className="text-indigo-600 font-medium mb-2">Available For:</h3>
-        <div className="bg-purple-100 flex items-center px-4 py-2 rounded-full w-max shadow-sm hover:shadow-md transition-all duration-300">
-          <BsChatDots className="text-purple-500 text-lg" />
-          <span className="text-sm ml-3 text-indigo-600">Chat</span>
-        </div>
+    {/* Availability */}
+    <div>
+      <h3 className="text-indigo-700 font-semibold text-lg mb-3">Available For:</h3>
+      <div className="bg-purple-100 flex items-center px-5 py-3 rounded-full w-max shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
+        <BsChatDots className="text-purple-500 text-xl" />
+        <span className="text-indigo-700 text-base font-medium ml-3">Chat</span>
       </div>
     </div>
   </div>
+</div>;
 </div>
 
 

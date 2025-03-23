@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import Sidebar from "../components/sidebar/page"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Cell } from 'recharts'
 import axios from 'axios'
+import Loader from '../components/loader'
+import { FaVideo, FaCommentDots, FaPhone, FaUser } from "react-icons/fa";
 
 export interface CounselorStatsResponse {
   success: boolean;
@@ -95,19 +97,15 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-row bg-white min-h-screen">
-        <div>
-          <Sidebar />
-        </div>
-        <div className="ml-16 p-7 text-2xl text-gray-800 flex-1 flex items-center justify-center">
-          <div className="animate-pulse text-center">
-            <div className="h-8 w-48 bg-gray-300 rounded mx-auto mb-4"></div>
-            <div className="text-purple-500">Loading dashboard data...</div>
-          </div>
+      <div className="flex bg-white min-h-screen">
+        <Sidebar />
+        <div className="flex-grow flex justify-center items-center">
+          <Loader />
         </div>
       </div>
     );
   }
+  
 
   if (!stats) {
     return (
@@ -131,90 +129,105 @@ const Dashboard = () => {
     <div className="flex flex-row bg-white min-h-screen">
       <Sidebar />
       <div className="flex-1 ml-16 md:ml-64 p-6 bg-white">
-        <div className="flex justify-between items-center mb-6">
-          <div className='flex flex-col'>
-            <h1 className="text-2xl   font-semibold text-gray-700">Counselor Dashboard</h1>
-            <p className="text-md font-medium text-gray-500">
-              Data for {stats.dateRange.startDate} to {stats.dateRange.endDate}
-            </p>
-          </div>
-        </div>
+      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col">
+      <h1 className="text-2xl font-semibold text-gray-600">Counselor Dashboard</h1>
+      <p className="text-gray-600">Data from {stats.dateRange.startDate} to {stats.dateRange.endDate}</p>
+      </div>
+    </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-purple-600 font-medium">Total Sessions</span>
-              <div className="bg-purple-50 p-2 rounded-lg">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-            <div className="text-3xl font-bold mb-1">{stats.sessionCounts.total}</div>
-            <div className="text-purple-600 text-sm">All session types</div>
-          </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-purple-600 font-medium">Test Referrals</span>
-              <div className="bg-purple-50 p-2 rounded-lg">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-            </div>
-            <div className="text-3xl font-bold mb-1">{stats.testReferrals}</div>
-            <div className="text-purple-600 text-sm">Total recommendations</div>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
+    <div className="flex justify-between items-center mb-4">
+      <span className="text-gray-800 text-xl">Total Sessions</span>
+      <div className="bg-purple-50 p-2 rounded-lg">
+        <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+    </div>
+    <div className="text-3xl font-bold text-indigo-500 mb-1">{stats.sessionCounts.total}</div>
+    <div className="text-gray-600">All session types</div>
+      </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-purple-600 font-medium">Total Earnings</span>
-              <div className="bg-purple-50 p-2 rounded-lg">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-            <div className="text-3xl font-bold mb-1">₹{stats.earnings.total}</div>
-            <div className="text-purple-600 text-sm">Combined income</div>
-          </div>
-        </div>
+      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
+      <div className="flex justify-between items-center mb-4">
+      <span className="text-gray-800 text-xl">Test Referrals</span>
+      <div className="bg-purple-50 p-2 rounded-lg">
+        <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+      </div>
+      </div>
+      <div className="text-3xl font-bold text-indigo-500 mb-1">{stats.testReferrals}</div>
+      <div className="text-gray-600">Total recommendations</div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6  shadow-sm border-l-4 border-blue-600">
-            <div className="flex items-center mb-2">
-              <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-              <div className="text-gray-600 font-medium">Video Sessions</div>
-            </div>
-            <div className="text-2xl font-bold text-gray-800">{stats.sessionCounts.video}</div>
-            <div className="text-blue-500 font-medium mt-2">₹{stats.earnings.video}</div>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-teal-600">
-            <div className="flex items-center mb-2">
-              <div className="w-3 h-3 rounded-full bg-teal-500 mr-2"></div>
-              <div className="text-gray-600 font-medium">Chat Sessions</div>
-            </div>
-            <div className="text-2xl font-bold text-gray-800">{stats.sessionCounts.chat}</div>
-            <div className="text-teal-500 font-medium mt-2">₹{stats.earnings.chat}</div>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-orange-600">
-            <div className="flex items-center mb-2">
-              <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
-              <div className="text-gray-600 font-medium">Phone Sessions</div>
-            </div>
-            <div className="text-2xl font-bold text-gray-800">{stats.sessionCounts.phone}</div>
-            <div className="text-orange-500 font-medium mt-2">₹{stats.earnings.phone}</div>
-          </div>
-          <div className="bg-white rounded-xl p-6 shadow-sm border-l-4 border-purple-600">
-            <div className="flex items-center mb-2">
-              <div className="w-3 h-3 rounded-full bg-purple-500 mr-2"></div>
-              <div className="text-gray-600 font-medium">Offline Sessions</div>
-            </div>
-            <div className="text-2xl font-bold text-gray-800">{stats.sessionCounts.offline}</div>
-            <div className="text-purple-500 font-medium mt-2">₹{stats.earnings.offline}</div>
-          </div>
-        </div>
+      <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
+      <div className="flex justify-between items-center mb-4">
+      <span className="text-gray-800 text-xl">Total Earnings</span>
+      <div className="bg-purple-50 p-2 rounded-lg">
+        <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+    </div>
+    <div className="text-3xl font-bold text-indigo-500 mb-1">₹{stats.earnings.total}</div>
+    <div className="text-gray-600">Combined income</div>
+    </div>
+    </div>
+
+
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    {/* Video Sessions */}
+    <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+    <div className="flex justify-between items-center mb-4">
+      <span className="text-gray-800 text-xl">Video Calls</span>
+      <div className="bg-purple-50 p-2 rounded-lg">
+        <FaVideo className="w-6 h-6 text-indigo-500" />
+      </div>
+    </div>
+    <div className="text-3xl font-bold text-indigo-500 mb-1">{stats.sessionCounts.video}</div>
+    <div className="text-gray-600">Live video consultations</div>
+  </div>
+
+  {/* Chat Sessions */}
+  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+    <div className="flex justify-between items-center mb-4">
+      <span className="text-gray-800 text-xl">Chat Interactions</span>
+      <div className="bg-purple-50 p-2 rounded-lg">
+        <FaCommentDots className="w-6 h-6 text-indigo-500" />
+      </div>
+    </div>
+    <div className="text-3xl font-bold text-indigo-500 mb-1">{stats.sessionCounts.chat}</div>
+    <div className="text-gray-600">Quick text conversations</div>
+  </div>
+
+  {/* Phone Sessions */}
+  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+    <div className="flex justify-between items-center mb-4">
+      <span className="text-gray-800 text-xl">Phone Calls</span>
+      <div className="bg-purple-50 p-2 rounded-lg">
+        <FaPhone className="w-6 h-6 text-indigo-500" />
+      </div>
+    </div>
+    <div className="text-3xl font-bold text-indigo-500 mb-1">{stats.sessionCounts.phone}</div>
+    <div className="text-gray-600">Voice-based consultations</div>
+  </div>
+
+  {/* Offline Sessions */}
+  <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500">
+    <div className="flex justify-between items-center mb-4">
+      <span className="text-gray-800 text-xl">In-Person Meetings</span>
+      <div className="bg-purple-50 p-2 rounded-lg">
+        <FaUser className="w-6 h-6 text-indigo-500" />
+      </div>
+    </div>
+    <div className="text-3xl font-bold text-indigo-500 mb-1">{stats.sessionCounts.offline}</div>
+    <div className="text-gray-600">Face-to-face interactions</div>
+  </div>
+</div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">

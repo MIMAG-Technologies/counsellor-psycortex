@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Next.js navigation
+import { useRouter } from "next/navigation";
 import {
   FaBars,
   FaTimes,
@@ -23,7 +23,9 @@ const Sidebar = () => {
       </button>
 
       <nav className="flex flex-col gap-6">
-        <SidebarItem icon={<FaHome />} label="Dashboard" isOpen={isOpen} route="/" />
+        <SidebarItem icon={<FaHome />} label="Login" isOpen={isOpen} route="/" />
+        <SidebarItem icon={<FaHome />} label="Dashboard" isOpen={isOpen} route="/dashboard" />
+
         <SidebarItem icon={<FaCalendarAlt />} label="Sessions" isOpen={isOpen} route="/sessions" />
         <SidebarItem icon={<FaClock />} label="Schedule" isOpen={isOpen} route="/schedule" />
         <SidebarItem icon={<FaUser />} label="Profile" isOpen={isOpen} route="/profile" />

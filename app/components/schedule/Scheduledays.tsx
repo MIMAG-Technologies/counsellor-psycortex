@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { format, addDays, subDays, parseISO, isToday, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import Loader from '../loader';
 
 interface WorkingHours {
   start: string | null;
@@ -251,7 +252,8 @@ const CounselorSchedule: React.FC = () => {
     );
   };
 
-  if (loading) return <div className="text-center p-8 text-gray-600">Loading schedule data...</div>;
+  if (loading) return <Loader/>
+  
   if (error) return <div className="text-center p-8 text-red-600">{error}</div>;
 
   return (

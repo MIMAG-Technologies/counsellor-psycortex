@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/sidebar/page";
+import Loader from "../components/loader";
+import { FaVideo } from "react-icons/fa"
+import { FaMessage } from "react-icons/fa6";
 
 interface User {
   id: string;
@@ -257,7 +260,7 @@ const Sessions = () => {
                   }`}
                   onClick={() => handleModeChange("video")}
                 >
-                  <span>📺</span> Video
+                  <span><FaVideo className="text-md"/></span> Video
                 </button>
                 <button 
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition duration-200 text-sm ${
@@ -267,7 +270,7 @@ const Sessions = () => {
                   }`}
                   onClick={() => handleModeChange("chat")}
                 >
-                  <span>💬</span> Chat
+                  <span><FaMessage className="text-md"/></span> Chat
                 </button>
               </div>
             </div>
@@ -310,11 +313,9 @@ const Sessions = () => {
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-10">
           {loading ? (
-            <div className="flex justify-center items-center h-64 bg-white rounded-lg shadow-sm">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
-            </div>
+            <Loader/>
           ) : sessions.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {sessions.map((session) => (
