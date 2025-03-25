@@ -17,12 +17,12 @@ const Sidebar = () => {
   
 
   return (
-    <div className={`fixed h-screen bg-white shadow-lg ${isOpen ? "w-64" : "w-16"} transition-all duration-300 p-4`}>
+    <div className={`fixed h-screen bg-gray-100 shadow-lg ${isOpen ? "w-64" : "w-16"} transition-all duration-300 p-4`}>
       <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 mb-6">
         {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
       </button>
 
-      <nav className="flex flex-col gap-6">
+      <nav className="flex flex-col gap-5">
       
         <SidebarItem icon={<FaHome />} label="Dashboard" isOpen={isOpen} route="/dashboard" />
 
@@ -47,7 +47,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, isOpen, route })
 
   return (
     <div
-      className="flex items-center gap-4 p-3 rounded-lg hover:bg-purple-200 cursor-pointer"
+      className="flex items-center gap-4 p-3 rounded-lg bg-gray-200 hover:bg-purple-200 cursor-pointer"
       onClick={() => router.push(route)} 
     >
       <span className="text-purple-600 text-xl">{icon}</span>

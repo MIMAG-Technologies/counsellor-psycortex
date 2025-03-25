@@ -27,7 +27,7 @@ export default function CounselorProfilePage() {
     <div className='min-h-screen flex'>
       <Sidebar /> 
 
-      <div className="w-full max-w-[1150px] md:ml-80 py-8 ml-16 mx-auto shadow-sm rounded-2xl overflow-hidden">
+      <div className="w-full max-w-[1150px] md:ml-80 py-8 ml-16 mx-auto rounded-2xl overflow-hidden">
         {/* Profile Header */}
         <div className="p-8 flex flex-col items-center">
           <div className="w-40 h-40 rounded-full bg-gray-100 flex items-center justify-center mb-6 transition-transform duration-300 hover:scale-105">
