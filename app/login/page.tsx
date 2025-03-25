@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
@@ -100,7 +101,7 @@ const Login = () => {
           
           <div className="text-center mt-5">
             <p className="text-gray-600">
-              Don't have an account?{" "}
+              Don&#39;t have an account?{" "}
               <a href="#" className="text-[#4338ca] hover:underline font-medium">
                 Register
               </a>

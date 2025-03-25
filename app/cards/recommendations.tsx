@@ -1,5 +1,5 @@
 import React from "react";
-import { BiUser, BiCalendar, BiEdit, BiTrash } from "react-icons/bi"; 
+import { BiUser, BiCalendar } from "react-icons/bi"; 
 import { MdOutlineMessage, MdLocalHospital } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import { recommendations } from "../types/recommendations/recommendations";

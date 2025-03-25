@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { format, addDays, subDays, parseISO, isToday, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
