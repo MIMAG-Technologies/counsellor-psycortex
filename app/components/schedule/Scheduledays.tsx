@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { format, addDays, subDays, parseISO, isToday, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
+import { format, addDays, subDays, parseISO, isToday, startOfToday, endOfToday, eachDayOfInterval } from 'date-fns';
 import { RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import Loader from '../loader';
 
@@ -42,8 +43,8 @@ const CounselorSchedule: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [currentMonth, setCurrentMonth] = useState<string>(format(new Date(), 'MMMM yyyy'));
   const calendarRef = useRef<HTMLDivElement>(null);
+  const BASE_URL=process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
     fetchCounselorData();
@@ -62,7 +63,7 @@ const CounselorSchedule: React.FC = () => {
   const fetchCounselorData = async (): Promise<void> => {
     try {
       setLoading(true);
-      const response = await axios.get<CounselorData>('https://backend.psycortex.in/counsellor/get_counsellor_details.php?counsellorId=c123456');
+      const response = await axios.get<CounselorData>(`${BASE_URL}/counsellor/get_counsellor_details.php?counsellorId=c123456`);
       if (response.data.success) {
         setScheduleData(response.data.data.sessionInfo.availability.weeklySchedule);
       } else {
@@ -81,18 +82,6 @@ const CounselorSchedule: React.FC = () => {
 
   const handleNextDay = (): void => {
     setSelectedDate(prevDate => addDays(prevDate, 1));
-  };
-
-  const handlePrevMonth = (): void => {
-    const newDate = subDays(startOfMonth(selectedDate), 1);
-    setSelectedDate(newDate);
-    setCurrentMonth(format(newDate, 'MMMM yyyy'));
-  };
-
-  const handleNextMonth = (): void => {
-    const newDate = addDays(endOfMonth(selectedDate), 1);
-    setSelectedDate(newDate);
-    setCurrentMonth(format(newDate, 'MMMM yyyy'));
   };
 
   const formatTime = (timeString: string | null): string => {
@@ -149,7 +138,7 @@ const CounselorSchedule: React.FC = () => {
     const timeSlots = generateTimeSlots(working_hours.start, working_hours.end);
 
     return (
-      <div className="bg-white rounded-xl p-6 md:p-8 shadow-sm min-h-64">
+      <div className="bg-white rounded-xl p-6 md:p-8 min-h-64">
         <div className="mb-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
             <h2 className="text-indigo-500 text-xl font-medium">
@@ -173,7 +162,7 @@ const CounselorSchedule: React.FC = () => {
             return (
               <div 
                 key={slot} 
-                className={`rounded-lg p-4 border transition-all hover:shadow-md cursor-pointer ${available ? 'border-gray-200 bg-gray-50 hover:border-green-300' : 'border-gray-200 bg-gray-50 hover:border-red-300'}`}
+                className={`rounded-lg p-4 border transition-all ${available ? 'border-gray-200 bg-gray-50' : 'border-gray-200 bg-gray-50'}`}
               >
                 <div className="text-base md:text-lg font-medium text-center text-gray-800 mb-2">
                   {formatTime(slot)}
@@ -193,12 +182,12 @@ const CounselorSchedule: React.FC = () => {
   const renderCalendarDays = () => {
     if (!scheduleData) return null;
 
-    // Get all days in the current month
-    const monthStart = startOfMonth(selectedDate);
-    const monthEnd = endOfMonth(selectedDate);
-    const allDaysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    // Get 7 days from today
+    const startDate = startOfToday();
+    const endDate = addDays(startDate, 6);
+    const sevenDaysInterval = eachDayOfInterval({ start: startDate, end: endDate });
     
-    const days = allDaysInMonth.map(day => {
+    const days = sevenDaysInterval.map(day => {
       const dayStr = format(day, 'yyyy-MM-dd');
       const dayData = scheduleData.find(d => d.date === dayStr);
       const isWorkingDay = dayData?.isWorkingDay === 1;
@@ -214,10 +203,10 @@ const CounselorSchedule: React.FC = () => {
             ${isTodayDate ? 'font-bold' : ''}`}
           onClick={() => setSelectedDate(day)}
         >
-          <div className={`${isTodayDate ? 'bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center' : 'w-8 h-8 flex items-center justify-center'}`}>
+          <div className={`flex items-center justify-center ${isTodayDate ? 'bg-indigo-500 text-white w-8 h-8 rounded-full' : 'w-8 h-8'}`}>
             {format(day, 'd')}
           </div>
-          <div className="text-xs mt-1">{format(day, 'EEE')}</div>
+          <div className="text-xs mt-1 text-center">{format(day, 'EEE')}</div>
         </div>
       );
     });
@@ -226,7 +215,7 @@ const CounselorSchedule: React.FC = () => {
       <div className="mb-8 relative">
         <div 
           ref={calendarRef}
-          className="flex overflow-x-auto py-2 px-1 scrollbar-thin scrollbar-thumb-indigo-300 scrollbar-track-gray-100"
+          className="flex justify-center overflow-x-auto py-2 px-1 scrollbar-thin scrollbar-thumb-indigo-300 scrollbar-track-gray-100"
           style={{ scrollbarWidth: 'thin', msOverflowStyle: 'none' }}
         >
           <div className="flex space-x-1 px-2">
@@ -236,7 +225,7 @@ const CounselorSchedule: React.FC = () => {
         <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -ml-2">
           <button 
             onClick={handlePrevDay} 
-            className="p-2 rounded-full bg-white shadow-md hover:bg-indigo-100 text-indigo-500"
+            className="p-2 rounded-full bg-white hover:bg-indigo-100 text-indigo-500"
           >
             <ChevronLeft size={16} />
           </button>
@@ -244,7 +233,7 @@ const CounselorSchedule: React.FC = () => {
         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 -mr-2">
           <button 
             onClick={handleNextDay} 
-            className="p-2 rounded-full bg-white shadow-md hover:bg-indigo-100 text-indigo-500"
+            className="p-2 rounded-full bg-white hover:bg-indigo-100 text-indigo-500"
           >
             <ChevronRight size={16} />
           </button>
@@ -258,7 +247,7 @@ const CounselorSchedule: React.FC = () => {
   if (error) return <div className="text-center p-8 text-red-600">{error}</div>;
 
   return (
-    <div className="w-full rounded-xl p-5 md:p-8 shadow-md">
+    <div className="w-full rounded-xl p-5 md:p-8">
       <div className="flex justify-between items-center mb-6 pb-4 border-b border-indigo-100">
         <h1 className="text-indigo-500 text-2xl font-semibold">Schedule Overview</h1>
         <button 
@@ -266,16 +255,6 @@ const CounselorSchedule: React.FC = () => {
           onClick={fetchCounselorData}
         >
           <RefreshCw size={20} />
-        </button>
-      </div>
-
-      <div className="flex justify-between items-center mb-6">
-        <button onClick={handlePrevMonth} className="p-2 rounded-full hover:bg-indigo-100">
-          <ChevronLeft size={20} className="text-indigo-500" />
-        </button>
-        <h2 className="text-indigo-500 text-lg font-medium">{currentMonth}</h2>
-        <button onClick={handleNextMonth} className="p-2 rounded-full hover:bg-indigo-100">
-          <ChevronRight size={20} className="text-indigo-500" />
         </button>
       </div>
 

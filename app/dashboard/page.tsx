@@ -133,7 +133,7 @@ const Dashboard = () => {
       <div className="flex justify-between items-center mb-6">
       <div className="flex flex-col">
       <h1 className="text-2xl font-semibold text-gray-600">Counselor Dashboard</h1>
-      <p className="text-gray-600">Data from {stats.dateRange.startDate} to {stats.dateRange.endDate}</p>
+     
       </div>
     </div>
 
@@ -143,7 +143,7 @@ const Dashboard = () => {
     <div className="flex justify-between items-center mb-4">
       <span className="text-gray-800 text-xl">Total Sessions</span>
       <div className="bg-purple-50 p-2 rounded-lg">
-        <svg className="w-6 h-6 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-6 h-6 text-indigo-500 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
@@ -230,64 +230,7 @@ const Dashboard = () => {
   </div>
 </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Session Distribution</h2>
-              <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">Last 3 months</div>
-            </div>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={sessionData}
-                  margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
-                  barSize={40}
-                >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
-                  <Tooltip cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }} />
-                  <Legend />
-                  <Bar dataKey="count" name="Sessions" radius={[4, 4, 0, 0]}>
-                    {sessionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-md border border-gray-300">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Commission Rates</h2>
-              <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">By Session Type</div>
-            </div>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={commissionRatesData}
-                  margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
-                  <Tooltip />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="rate" 
-                    name="Rate (%)" 
-                    stroke="#4F46E5" 
-                    strokeWidth={3} 
-                    dot={{ r: 6, strokeWidth: 2 }} 
-                    activeDot={{ r: 8 }} 
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

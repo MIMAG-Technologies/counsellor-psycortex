@@ -54,7 +54,7 @@ interface ApiResponse {
 
 const fetchSessions = async (mode = "video", status = "completed"): Promise<Session[]> => {
   try {
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://backend.psycortex.in";
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL ;
     const api = `${BASE_URL}/counsellor/get_counsellor_sessions.php?counsellorId=c123456&mode=${mode}&status=${status}&page=1&limit=10`;
     
     const response = await axios.get<ApiResponse>(api);
@@ -88,7 +88,7 @@ const Sessions = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeMode, setActiveMode] = useState("video");
-  const [activeStatus, setActiveStatus] = useState("completed");
+  const [activeStatus, setActiveStatus] = useState("upcoming");
 
   useEffect(() => {
     const getData = async () => {
@@ -108,7 +108,6 @@ const Sessions = () => {
     setActiveStatus(status);
   };
 
-  
   const SessionCard = ({ session }: { session: Session }) => {
     const sessionDate = new Date(session.scheduledAt);
     const formattedDate = sessionDate.toLocaleDateString('en-US', { 
@@ -123,7 +122,6 @@ const Sessions = () => {
       hour12: true
     });
 
-    
     let actualDurationText = "Not available";
     if (session.startedAt && session.endedAt) {
       const startTime = new Date(session.startedAt);
@@ -145,7 +143,7 @@ const Sessions = () => {
     }
 
     return (
-      <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+      <div className="bg-white border-2 border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
         <div className="bg-indigo-50 p-3 flex justify-between items-center border-b border-indigo-100">
           <div className="flex items-center">
             <span className="text-indigo-500 mr-2"><FaCalendar/></span>
@@ -204,7 +202,7 @@ const Sessions = () => {
               <p className="text-xs text-gray-600">You Joined</p>
             </div>
           </div>
-          
+
           {session.notes && (
             <div className="mt-3">
               <p className="text-xs text-gray-500 mb-1">Notes</p>
@@ -212,7 +210,35 @@ const Sessions = () => {
             </div>
           )}
           
-          {session.review !== null && (
+          {activeStatus === "upcoming" && (
+            <div className="mt-3 flex gap-2">
+              {activeMode === "video" ? (
+                <button 
+                  disabled={!session.actions.canJoin}
+                  className={`w-full py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    session.actions.canJoin 
+                      ? 'bg-indigo-500 text-white hover:bg-indigo-600' 
+                      : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Join Meet
+                </button>
+              ) : (
+                <button 
+                  disabled={!session.actions.canJoin}
+                  className={`w-full py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    session.actions.canJoin 
+                      ? 'bg-indigo-500 text-white hover:bg-indigo-600' 
+                      : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Open Chat
+                </button>
+              )}
+            </div>
+          )}
+          
+          {session.review !== null && activeStatus === "completed" && (
             <div className="mt-3 flex items-center">
               <div className="flex text-yellow-400">
                 {[...Array(5)].map((_, i) => (
@@ -226,24 +252,13 @@ const Sessions = () => {
               </span>
             </div>
           )}
-          
-          <div className="mt-4 flex justify-between">
-            <button className="text-indigo-500 text-xs font-medium hover:text-indigo-700 transition-colors duration-300">
-              View Details
-            </button>
-            {session.review === null && (
-              <button className="bg-indigo-500 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-indigo-600 transition-colors duration-300">
-                Add Notes
-              </button>
-            )}
-          </div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className=" min-h-screen">
+    <div className="min-h-screen">
       <Sidebar />
       <div className="ml-16 md:ml-[250px] p-6">
         <h1 className="text-2xl text-indigo-500 font-semibold">My Sessions</h1>

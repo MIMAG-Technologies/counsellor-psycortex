@@ -26,10 +26,10 @@ const Recommendation = () => {
       <Sidebar />
   
       {loading ? (
-        <div className="flex items-center justify-center w-full h-screen">
-          <Loader />
-        </div>
-      ) : (
+      <div className="flex-grow flex justify-center items-center">
+        <Loader />
+      </div>
+    ) : (
         <div className="ml-16 md:ml-64 p-6 w-full">
           {/* Header with Add Button */}
           <div className="flex items-center justify-between text-indigo-500">
