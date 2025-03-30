@@ -57,21 +57,30 @@ const Login = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Left Section */}
-      <div className="hidden md:flex w-1/3 bg-gradient-to-r from-[#4338ca] to-[#6f2a86] items-center justify-center shadow-lg">
+      <div className="hidden md:flex w-1/3 bg-gradient-to-br from-[#4338ca] via-[#5647d2] to-[#6f2a86] items-center justify-center shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute transform -rotate-45 bg-white/10 w-96 h-96 -left-48 -top-48 rounded-full"></div>
+          <div className="absolute transform rotate-45 bg-white/10 w-96 h-96 -right-48 -bottom-48 rounded-full"></div>
+        </div>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center text-white px-8"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center text-white px-12 z-10"
         >
-          <img
-            src="https://psycortex.in/assets/Images/thebraintakeLogo.png"
-            alt="Psycortex Logo"
-            className="h-16 mx-auto mb-4"
+          <motion.img
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5 }}
+        src="https://psycortex.in/assets/Images/thebraintakeLogo.png"
+        alt="Psycortex Logo"
+        className="h-20 mx-auto mb-8 drop-shadow-xl hover:scale-105 transition-transform duration-300"
           />
-          <h1 className="text-3xl font-semibold">Welcome Back</h1>
-          <p className="text-lg text-gray-200 mt-2">
-            Login to manage and support your clients with ease.
+          <h1 className="text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-200">
+        Welcome Back
+          </h1>
+          <p className="text-lg text-gray-100 mt-4 leading-relaxed font-light">
+        Login to manage and support your clients with ease and professionalism.
           </p>
         </motion.div>
       </div>
