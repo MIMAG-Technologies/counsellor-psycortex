@@ -3,8 +3,8 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "../components/sidebar/page";
-import Loader from "../components/loader";
+import Sidebar from "../../components/sidebar/page";
+import Loader from "../../components/loader";
 import { FaCalendar, FaVideo } from "react-icons/fa"
 import { FaMessage } from "react-icons/fa6";
 

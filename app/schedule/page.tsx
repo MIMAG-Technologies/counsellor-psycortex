@@ -2,8 +2,8 @@
 
 import type { NextPage } from 'next';
 
-import CounselorSchedule from '../components/schedule/Scheduledays';
-import Sidebar from '../components/sidebar/page';
+import CounselorSchedule from '../../components/schedule/Scheduledays';
+import Sidebar from '../../components/sidebar/page';
 
 const SchedulePage: NextPage = () => {
   return (
