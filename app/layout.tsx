@@ -3,6 +3,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { usePathname } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 export default function RootLayout({
@@ -21,6 +23,18 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
+          <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
           {pathname !== "/login" && <ProtectedRoute />}
           {children}
         </AuthProvider>
