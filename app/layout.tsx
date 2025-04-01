@@ -1,17 +1,10 @@
-
-import { Geist, Geist_Mono } from "next/font/google";
+"use client"
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { usePathname } from "next/navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 export default function RootLayout({
@@ -19,21 +12,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+    const pathname = usePathname();
   return (
-    
     <html lang="en">
       <head>
-        <title>Counselor  | Psycortex</title>
-        <meta
-          name="description"
-          content=""
-        />
+        <title>Counselor | Psycortex</title>
+        <meta name="description" content="" />
         <link rel="icon" href="https://psycortex.in/favicon.ico" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body>
+        <AuthProvider>
+          <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+          {pathname !== "/login" && <ProtectedRoute />}
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

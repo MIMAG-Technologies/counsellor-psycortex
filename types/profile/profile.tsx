@@ -96,3 +96,12 @@ export interface ApiResponse {
   success: boolean;
   data: CounselorData | null;
 }
+
+
+export type Me = {
+  id: string;
+  name: string;
+  email: string;
+  isVerified: boolean;
+  documentsVerified: boolean;
+}

@@ -2,10 +2,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Sidebar from "../components/sidebar/page"
+import Sidebar from "../../components/sidebar/page"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Cell } from 'recharts'
 import axios from 'axios'
-import Loader from '../components/loader'
+import Loader from '../../components/loader'
 import { FaVideo, FaCommentDots, FaPhone, FaUser } from "react-icons/fa";
 
 export interface CounselorStatsResponse {

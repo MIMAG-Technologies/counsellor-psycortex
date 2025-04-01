@@ -2,10 +2,10 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { PhoneIcon, MailIcon } from 'lucide-react';
-import { CounselorData } from '../types/profile/profile';
-import fetchProfile from '../utils/profile';
-import Loader from '../components/loader';
-import Sidebar from '../components/sidebar/page';
+import { CounselorData } from '../../types/profile/profile';
+import fetchProfile from '../../utils/profile';
+import Loader from '../../components/loader';
+import Sidebar from '../../components/sidebar/page';
 
 
 export default function CounselorProfilePage() {
