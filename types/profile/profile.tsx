@@ -9,6 +9,9 @@ export interface CounselorData {
   professionalInfo: ProfessionalInfo;
   practiceInfo: PracticeInfo;
   sessionInfo: SessionInfo;
+  verificationStatus: VerificationStatus;
+  metrics: Metrics;
+  addresses: Address[];
 }
 
 export interface PersonalInfo {
@@ -53,11 +56,33 @@ export interface Language {
 }
 
 export interface SessionInfo {
-  availability: {
-    timeZone: string;
-    weeklySchedule: WeeklySchedule;
-  };
+  availability: Availability;
   pricing: Pricing;
+}
+
+export interface Availability {
+  timeZone: string;
+  weeklySchedule: WeeklySchedule[];
+  communicationModes: CommunicationMode[];
+}
+
+export interface WeeklySchedule {
+  date: string;
+  day: string;
+  isWorkingDay: number;
+  working_hours: {
+    start: string | null;
+    end: string | null;
+  };
+  unavailable_slots: UnavailableSlot[];
+}
+
+export interface UnavailableSlot {
+  time: string;
+  is_available: boolean;
+  status: string;
+  leave_reason?: string | null;
+  leave_until?: string | null;
 }
 
 export interface Pricing {
@@ -75,27 +100,32 @@ export interface SessionRate {
   availabilityTypes: CommunicationMode[];
 }
 
-export interface WeeklySchedule {
-  date: string;
-  day: string;
-  isWorkingDay: number;
-  working_hours: {
-    start: string | null;
-    end: string | null;
-  };
-  unavailable_slots: {
-    time: string;
-    is_available: boolean;
-    status: string;
-    leave_reason?: string | null;
-    leave_until?: string | null;
-  }[];
+export interface VerificationStatus {
+  isVerified: boolean;
+  documentsVerified: boolean;
+  backgroundCheckDate: string;
+}
+
+export interface Metrics {
+  totalSessions: number;
+  averageRating: number;
+  totalReviews: number;
+  responseRate: number;
+  cancellationRate: number;
+}
+
+export interface Address {
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
 }
 
 export interface ApiResponse {
   success: boolean;
   data: CounselorData | null;
 }
+
 
 
 export type Me = {

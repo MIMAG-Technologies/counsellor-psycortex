@@ -7,6 +7,7 @@ import Sidebar from "../../components/sidebar/page";
 import Loader from "../../components/loader";
 import { FaCalendar, FaVideo } from "react-icons/fa"
 import { FaMessage } from "react-icons/fa6";
+import { useAuth } from "@/context/AuthContext";
 
 interface User {
   id: string;
@@ -54,7 +55,10 @@ interface ApiResponse {
 
 const fetchSessions = async (mode = "video", status = "completed"): Promise<Session[]> => {
   try {
+   
+    
     const BASE_URL = process.env.NEXT_PUBLIC_API_URL ;
+    
     const api = `${BASE_URL}/counsellor/get_counsellor_sessions.php?counsellorId=c123456&mode=${mode}&status=${status}&page=1&limit=10`;
     
     const response = await axios.get<ApiResponse>(api);
@@ -89,6 +93,7 @@ const Sessions = () => {
   const [loading, setLoading] = useState(true);
   const [activeMode, setActiveMode] = useState("video");
   const [activeStatus, setActiveStatus] = useState("upcoming");
+  const {me}=useAuth();
 
   useEffect(() => {
     const getData = async () => {
@@ -110,6 +115,7 @@ const Sessions = () => {
 
   const SessionCard = ({ session }: { session: Session }) => {
     const sessionDate = new Date(session.scheduledAt);
+    
     const formattedDate = sessionDate.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'short', 

@@ -2,7 +2,7 @@
 import { BiPlus } from "react-icons/bi";
 import Sidebar from "@/components/sidebar/page";
 import { MockData } from "@/types/recommendations/recommendations";
-import RecommendationCard from "@/cards/recommendations";
+import RecommendationCard from "../../cards/recommendations";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loader from "@/components/loader";

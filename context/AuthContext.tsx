@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           if (res.data.isCounsellor) {
             setMe(res.data.counsellorDetails);
           }
+
         } catch (error) {
           console.error("Failed to fetch user details:", error);
         }
