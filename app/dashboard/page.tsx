@@ -237,7 +237,7 @@ const Dashboard = () => {
             <h2 className="text-xl font-semibold text-gray-600 mb-4">Performance Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Average Rating */}
-              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-yellow-500">
+              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-500">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-gray-800 text-xl">Average Rating</span>
                   <div className="bg-yellow-50 p-2 rounded-lg">
@@ -251,7 +251,7 @@ const Dashboard = () => {
               </div>
 
               {/* Response Rate */}
-              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-green-500">
+              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-500">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-gray-800 text-xl">Response Rate</span>
                   <div className="bg-green-50 p-2 rounded-lg">
@@ -265,7 +265,7 @@ const Dashboard = () => {
               </div>
 
               {/* Cancellation Rate */}
-              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-red-500">
+              <div className="bg-white rounded-xl p-6 shadow-md border-l-4 border-indigo-500">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-gray-800 text-xl">Cancellation Rate</span>
                   <div className="bg-red-50 p-2 rounded-lg">

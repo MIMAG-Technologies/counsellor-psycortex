@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../../components/sidebar/page";
 import Loader from "../../components/loader";
-import { FaCalendar, FaVideo } from "react-icons/fa"
-import { FaMessage } from "react-icons/fa6";
+import { FaCalendar, FaVideo } from "react-icons/fa";
+import { FaMessage, FaPerson } from "react-icons/fa6";
 import { useAuth } from "@/context/AuthContext";
 
 interface User {
@@ -53,16 +53,14 @@ interface ApiResponse {
   sessions: Session[];
 }
 
-const fetchSessions = async (mode = "video", status = "completed"): Promise<Session[]> => {
+const fetchSessions = async (counsellorId: string, mode: string = "video", status: string = "upcoming"): Promise<Session[]> => {
   try {
-   
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
     
-    const BASE_URL = process.env.NEXT_PUBLIC_API_URL ;
-    
-    const api = `${BASE_URL}/counsellor/get_counsellor_sessions.php?counsellorId=c123456&mode=${mode}&status=${status}&page=1&limit=10`;
+    const api = `${BASE_URL}/counsellor/get_counsellor_sessions.php?counsellorId=${counsellorId}&mode=${mode}&status=${status}&page=1&limit=10`;
     
     const response = await axios.get<ApiResponse>(api);
-    
+
     if (response.data.success && response.data.sessions) {
       return response.data.sessions;
     }
@@ -72,7 +70,6 @@ const fetchSessions = async (mode = "video", status = "completed"): Promise<Sess
     return [];
   }
 };
-
 
 const formatDuration = (minutes: number): string => {
   if (minutes < 0) return "Invalid duration";
@@ -91,19 +88,26 @@ const formatDuration = (minutes: number): string => {
 const Sessions = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeMode, setActiveMode] = useState("video");
-  const [activeStatus, setActiveStatus] = useState("upcoming");
-  const {me}=useAuth();
+  const [activeMode, setActiveMode] = useState<string>("video");
+  const [activeStatus, setActiveStatus] = useState<string>("upcoming");
+  const [isClient, setIsClient] = useState(false);
+  const { me } = useAuth();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
-      const data = await fetchSessions(activeMode, activeStatus);
-      setSessions(data);
-      setLoading(false);
+      if (me?.id) {
+        setLoading(true);
+        const data = await fetchSessions(me.id, activeMode, activeStatus);
+        setSessions(data);
+        setLoading(false);
+      }
     };
     getData();
-  }, [activeMode, activeStatus]);
+  }, [activeMode, activeStatus, me?.id]);
 
   const handleModeChange = (mode: string) => {
     setActiveMode(mode);
@@ -112,6 +116,21 @@ const Sessions = () => {
   const handleStatusChange = (status: string) => {
     setActiveStatus(status);
   };
+
+  // Return a simplified version for server-side rendering
+  if (!isClient) {
+    return (
+      <div className="min-h-screen">
+        <Sidebar />
+        <div className="ml-16 md:ml-[250px] p-6">
+          <h1 className="text-2xl text-indigo-500 font-semibold">My Sessions</h1>
+          <div className="mt-10">
+            <Loader />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const SessionCard = ({ session }: { session: Session }) => {
     const sessionDate = new Date(session.scheduledAt);
@@ -148,6 +167,12 @@ const Sessions = () => {
       actualDurationText = formatDuration(session.duration || 0);
     }
 
+    // Format the status text safely
+    const formatStatus = (status: string | null | undefined): string => {
+      if (!status) return "Unknown";
+      return status.charAt(0).toUpperCase() + status.slice(1);
+    };
+
     return (
       <div className="bg-white border-2 border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
         <div className="bg-indigo-50 p-3 flex justify-between items-center border-b border-indigo-100">
@@ -156,36 +181,36 @@ const Sessions = () => {
             <span className="text-gray-700 font-medium text-sm">{formattedDate} at {formattedTime}</span>
           </div>
           <span className="bg-indigo-500 text-white px-2.5 py-0.5 rounded-full text-xs font-medium">
-            {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
+            {formatStatus(session.status)}
           </span>
         </div>
         
         <div className="p-4">
           <div className="flex items-center">
-            {session.user.image ? (
+            {session.user && session.user.image ? (
               <div className="w-12 h-12 rounded-full border border-gray-200 overflow-hidden">
                 <img
                   src={session.user.image}
-                  alt={session.user.name}
+                  alt={session.user.name || "User"}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).onerror = null;
-                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name)}&color=4F46E5&background=EEF2FF`;
+                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user.name || "User")}&color=4F46E5&background=EEF2FF`;
                   }}
                 />
               </div>
             ) : (
               <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center border border-indigo-100">
                 <span className="text-indigo-500 text-lg font-medium">
-                  {session.user.name.charAt(0)}
+                  {session.user && session.user.name ? session.user.name.charAt(0) : "U"}
                 </span>
               </div>
             )}
             
             <div className="ml-3">
-              <p className="text-base font-medium text-gray-800">{session.user.name}</p>
+              <p className="text-base font-medium text-gray-800">{session.user?.name || "Unknown User"}</p>
               <p className="text-gray-500 text-xs">
-                ID: {session.id.substring(0, 8)}...
+                ID: {session.id ? session.id.substring(0, 8) + "..." : "N/A"}
               </p>
             </div>
           </div>
@@ -200,11 +225,11 @@ const Sessions = () => {
               <p className="text-sm font-medium text-gray-700">{actualDurationText}</p>
             </div>
             <div className="flex items-center">
-              <div className={`w-2 h-2 rounded-full mr-1.5 ${session.attendance.userJoined ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <div className={`w-2 h-2 rounded-full mr-1.5 ${session.attendance && session.attendance.userJoined ? 'bg-green-500' : 'bg-red-500'}`}></div>
               <p className="text-xs text-gray-600">Client Joined</p>
             </div>
             <div className="flex items-center">
-              <div className={`w-2 h-2 rounded-full mr-1.5 ${session.attendance.counsellorJoined ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <div className={`w-2 h-2 rounded-full mr-1.5 ${session.attendance && session.attendance.counsellorJoined ? 'bg-green-500' : 'bg-red-500'}`}></div>
               <p className="text-xs text-gray-600">You Joined</p>
             </div>
           </div>
@@ -220,25 +245,36 @@ const Sessions = () => {
             <div className="mt-3 flex gap-2">
               {activeMode === "video" ? (
                 <button 
-                  disabled={!session.actions.canJoin}
+                  disabled={!session.actions?.canJoin}
                   className={`w-full py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                    session.actions.canJoin 
+                    session.actions?.canJoin 
                       ? 'bg-indigo-500 text-white hover:bg-indigo-600' 
                       : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   }`}
                 >
                   Join Meet
                 </button>
-              ) : (
+              ) : activeMode === "chat" ? (
                 <button 
-                  disabled={!session.actions.canJoin}
+                  disabled={!session.actions?.canJoin}
                   className={`w-full py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                    session.actions.canJoin 
+                    session.actions?.canJoin 
                       ? 'bg-indigo-500 text-white hover:bg-indigo-600' 
                       : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   }`}
                 >
                   Open Chat
+                </button>
+              ) : (
+                <button 
+                  disabled={!session.actions?.canJoin}
+                  className={`w-full py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    session.actions?.canJoin 
+                      ? 'bg-indigo-500 text-white hover:bg-indigo-600' 
+                      : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  Confirm Arrival
                 </button>
               )}
             </div>
@@ -294,12 +330,22 @@ const Sessions = () => {
                 >
                   <span><FaMessage className="text-md"/></span> Chat
                 </button>
+                <button 
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition duration-200 text-sm ${
+                    activeMode === "in-person" 
+                      ? "bg-purple-500 text-white" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                  onClick={() => handleModeChange("in-person")}
+                >
+                  <span><FaPerson className="text-md"/></span> In-Person
+                </button>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <h2 className="text-gray-700 font-medium">Status:</h2>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeStatus === "upcoming" 
@@ -309,6 +355,16 @@ const Sessions = () => {
                   onClick={() => handleStatusChange("upcoming")}
                 >
                   Upcoming
+                </button>
+                <button 
+                  className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
+                    activeStatus === "ongoing" 
+                      ? "bg-purple-500 text-white" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                  onClick={() => handleStatusChange("ongoing")}
+                >
+                 Ongoing
                 </button>
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
@@ -323,12 +379,22 @@ const Sessions = () => {
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeStatus === "cancelled" 
-                      ? "bg-indigo-500 text-white" 
+                      ? "bg-purple-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleStatusChange("cancelled")}
                 >
                   Cancelled
+                </button>
+                <button 
+                  className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
+                    activeStatus === "expired" 
+                      ? "bg-purple-500 text-white" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                  onClick={() => handleStatusChange("expired")}
+                >
+                  Expired
                 </button>
               </div>
             </div>

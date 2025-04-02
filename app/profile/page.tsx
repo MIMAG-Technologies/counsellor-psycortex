@@ -14,7 +14,11 @@ export default function CounselorProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       const profileData = await fetchProfile();
-      setData(profileData);
+      if (profileData && profileData.success) {
+        setData(profileData.data);
+      } else {
+        setData(null);
+      }
     };
     fetchData();
   }, []);

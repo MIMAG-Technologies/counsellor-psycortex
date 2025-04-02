@@ -5,13 +5,9 @@ import axios from 'axios';
 import { format, addDays, subDays, parseISO, isToday, startOfToday, endOfToday, eachDayOfInterval } from 'date-fns';
 import { RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import Loader from '../loader';
+import { useAuth } from '@/context/AuthContext';
 
-interface WorkingHours {
-  start: string | null;
-  end: string | null;
-}
-
-interface UnavailableSlot {
+interface Slot {
   time: string;
   is_available: boolean;
   status: string;
@@ -22,20 +18,18 @@ interface UnavailableSlot {
 interface DaySchedule {
   date: string;
   day: string;
-  isWorkingDay: number;
-  working_hours: WorkingHours;
-  unavailable_slots: UnavailableSlot[];
+  is_working_day: boolean;
+  working_hours: {
+    start: string | null;
+    end: string | null;
+  };
+  slots: Slot[];
 }
 
-interface CounselorData {
+interface ApiResponse {
   success: boolean;
-  data: {
-    sessionInfo: {
-      availability: {
-        weeklySchedule: DaySchedule[];
-      };
-    };
-  };
+  counsellorId: string;
+  weeklySchedule: DaySchedule[];
 }
 
 const CounselorSchedule: React.FC = () => {
@@ -44,11 +38,14 @@ const CounselorSchedule: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const calendarRef = useRef<HTMLDivElement>(null);
-  const BASE_URL=process.env.NEXT_PUBLIC_API_URL
+  const { me } = useAuth();
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://backend.psycortex.in/';
 
   useEffect(() => {
-    fetchCounselorData();
-  }, []);
+    if (me?.id) {
+      fetchCounselorData();
+    }
+  }, [me?.id]);
 
   useEffect(() => {
     // Scroll to selected date when it changes
@@ -61,11 +58,14 @@ const CounselorSchedule: React.FC = () => {
   }, [selectedDate]);
 
   const fetchCounselorData = async (): Promise<void> => {
+    if (!me?.id) return;
+    
     try {
       setLoading(true);
-      const response = await axios.get<CounselorData>(`${BASE_URL}/counsellor/get_counsellor_details.php?counsellorId=c123456`);
+      const response = await axios.get<ApiResponse>(`${BASE_URL}/counsellor/get_counsellor_schedule.php?counsellorId=${me.id}`);
+      
       if (response.data.success) {
-        setScheduleData(response.data.data.sessionInfo.availability.weeklySchedule);
+        setScheduleData(response.data.weeklySchedule);
       } else {
         setError('Failed to fetch data');
       }
@@ -107,9 +107,10 @@ const CounselorSchedule: React.FC = () => {
     return slots;
   };
 
-  const isSlotAvailable = (slot: string, unavailableSlots: UnavailableSlot[] | undefined): boolean => {
-    if (!unavailableSlots) return true;
-    return !unavailableSlots.some(unavailableSlot => unavailableSlot.time === slot);
+  const isSlotAvailable = (slot: string, slots: Slot[] | undefined): boolean => {
+    if (!slots || slots.length === 0) return true;
+    const foundSlot = slots.find(s => s.time === slot);
+    return foundSlot ? foundSlot.is_available : true;
   };
 
   const renderSelectedDaySchedule = () => {
@@ -126,7 +127,7 @@ const CounselorSchedule: React.FC = () => {
       );
     }
 
-    if (!dayData.isWorkingDay) {
+    if (!dayData.is_working_day) {
       return (
         <div className="bg-white rounded-xl p-8 text-center text-gray-600 min-h-64">
           <p>This is not a working day.</p>
@@ -134,7 +135,7 @@ const CounselorSchedule: React.FC = () => {
       );
     }
 
-    const { working_hours, unavailable_slots } = dayData;
+    const { working_hours, slots } = dayData;
     const timeSlots = generateTimeSlots(working_hours.start, working_hours.end);
 
     return (
@@ -158,7 +159,7 @@ const CounselorSchedule: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
           {timeSlots.map(slot => {
-            const available = isSlotAvailable(slot, unavailable_slots);
+            const available = isSlotAvailable(slot, dayData.slots);
             return (
               <div 
                 key={slot} 
@@ -190,7 +191,7 @@ const CounselorSchedule: React.FC = () => {
     const days = sevenDaysInterval.map(day => {
       const dayStr = format(day, 'yyyy-MM-dd');
       const dayData = scheduleData.find(d => d.date === dayStr);
-      const isWorkingDay = dayData?.isWorkingDay === 1;
+      const isWorkingDay = dayData?.is_working_day === true;
       const isSelected = format(selectedDate, 'yyyy-MM-dd') === dayStr;
       const isTodayDate = isToday(day);
       
