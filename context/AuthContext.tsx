@@ -33,13 +33,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           if (res.data.isCounsellor) {
             setMe(res.data.counsellorDetails);
           }
-setMe({
-  id: "c123456",
-  name: "Sarah JohnSon",
-  email: "nagrikar1403@gmail.com",
-  isVerified: true,
-  documentsVerified: true
-});
         } catch (error) {
           console.error("Failed to fetch user details:", error);
         }
