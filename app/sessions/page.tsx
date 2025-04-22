@@ -8,7 +8,7 @@ import Loader from "../../components/loader";
 import { FaCalendar, FaVideo } from "react-icons/fa";
 import { FaMessage, FaPerson } from "react-icons/fa6";
 import { useAuth } from "@/context/AuthContext";
-
+import { useRouter } from "next/navigation";
 interface User {
   id: string;
   name: string;
@@ -92,6 +92,9 @@ const Sessions = () => {
   const [activeStatus, setActiveStatus] = useState<string>("upcoming");
   const [isClient, setIsClient] = useState(false);
   const { me } = useAuth();
+  const router =useRouter();
+
+
 
   useEffect(() => {
     setIsClient(true);
@@ -134,7 +137,9 @@ const Sessions = () => {
 
   const SessionCard = ({ session }: { session: Session }) => {
     const sessionDate = new Date(session.scheduledAt);
-    
+    const handleclick=()=>{
+      router.push(`/sessions/${session.id}?userId=${session.user.id}`)
+    }
     const formattedDate = sessionDate.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'short', 
@@ -174,7 +179,7 @@ const Sessions = () => {
     };
 
     return (
-      <div className="bg-white border-2 border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+      <div onClick={handleclick} className="bg-white border-2 border-gray-100 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
         <div className="bg-indigo-50 p-3 flex justify-between items-center border-b border-indigo-100">
           <div className="flex items-center">
             <span className="text-indigo-500 mr-2"><FaCalendar/></span>
