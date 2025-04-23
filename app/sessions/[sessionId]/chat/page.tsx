@@ -24,7 +24,7 @@ interface ApiResponse {
   messages: Message[];
 }
 
-const POLLING_INTERVAL = 1500;
+const POLLING_INTERVAL = 2500;
 
 export default function ChatSessionPage(): JSX.Element {
   const params = useParams();

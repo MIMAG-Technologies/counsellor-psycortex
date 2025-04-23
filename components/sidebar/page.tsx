@@ -29,7 +29,7 @@ const Sidebar = () => {
         <SidebarItem icon={<FaCalendarAlt />} label="Sessions" isOpen={isOpen} route="/sessions" />
         <SidebarItem icon={<FaClock />} label="Schedule" isOpen={isOpen} route="/schedule" />
         <SidebarItem icon={<FaUser />} label="Profile" isOpen={isOpen} route="/profile" />
-        <SidebarItem icon={<FaStar />} label="Recommendations" isOpen={isOpen} route="/recommendations" />
+        
       </nav>
     </div>
   );
