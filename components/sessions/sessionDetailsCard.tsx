@@ -56,7 +56,7 @@ export function SessionDetailsCard({ sessionDetails, userDetails, handlers }: Se
 
     if (isChat) {
       // Preserve the session ID format and append /chat
-      const chatUrl = `/sessions/${sessionDetails.id}/chat?userId=${userDetails.id}`;
+      const chatUrl = `/sessions/${sessionDetails.id}/chat`;
 
       console.log("Navigating to:", chatUrl);
       router.push(chatUrl);
