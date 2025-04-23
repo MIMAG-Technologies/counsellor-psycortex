@@ -1,4 +1,7 @@
-import { FaVideo, FaFile, FaEye, FaCheck, FaClipboardList } from "react-icons/fa6";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { FaVideo, FaFile, FaEye, FaCheck, FaClipboardList, FaComment } from "react-icons/fa6";
 import { ActionButton } from "../button/actionButton";
 import { SessionDetails } from "@/types/sessiondetails/details";
 
@@ -13,28 +16,44 @@ interface SessionActionsProps {
 }
 
 export function SessionActions({ sessionDetails, handlers }: SessionActionsProps) {
+  const router = useRouter();
   const { handleSubmitCase, handleViewCase, handleMarkComplete, handleRecommendTest } = handlers;
-  
+
+  const isUpcoming = sessionDetails.status === 'upcoming';
+  const isChat = sessionDetails.session_type === 'chat';
+
+  const canJoinSession = !isUpcoming && (
+    (isChat && sessionDetails.status === 'active') || 
+    (!isChat && sessionDetails.meetLink && sessionDetails.status === 'active')
+  );
+
+  const handleJoin = () => {
+    if (isChat) {
+      router.push(`/sessions/${sessionDetails.id}/chat`);
+    } else if (sessionDetails.meetLink) {
+      window.open(sessionDetails.meetLink, '_blank');
+    }
+  };
+
   return (
     <div>
       <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
         Actions
       </h3>
-      
-      {/* Primary Action - Join Chat */}
-      {sessionDetails.meetLink && (
-        <div className="mb-4">
-          <ActionButton
-            icon={<FaVideo className="w-5 h-5" />}
-            label="Join Chat"
-            onClick={() => window.open(sessionDetails.meetLink, '_blank')}
-            variant="primary"
-            fullWidth
-          />
-        </div>
-      )}
 
-      {/* Action Grid - 2 columns for better layout */}
+      {/* Join Session Button */}
+      <div className="mb-4">
+        <ActionButton
+          icon={isChat ? <FaComment className="w-5 h-5" /> : <FaVideo className="w-5 h-5" />}
+          label={`Join ${isChat ? 'Chat' : 'Video'} ${isUpcoming ? '(Upcoming)' : ''}`}
+          onClick={handleJoin}
+          variant="primary"
+          fullWidth
+          disabled={!canJoinSession}
+        />
+      </div>
+
+      {/* Action Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <ActionButton
           icon={<FaFile className="w-4 h-4" />}

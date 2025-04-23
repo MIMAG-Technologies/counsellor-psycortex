@@ -4,6 +4,7 @@ import { SessionDetails } from "@/types/sessiondetails/details";
 
 interface SessionInfoGridProps {
   sessionDetails: SessionDetails;
+  
 }
 
 export function SessionInfoGrid({ sessionDetails }: SessionInfoGridProps) {

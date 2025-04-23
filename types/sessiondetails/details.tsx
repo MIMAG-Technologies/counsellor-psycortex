@@ -20,8 +20,9 @@ export interface UserDetails {
     id: string;
     scheduledAt: string;
     duration: number;
-    status: string;
+    status: 'upcoming' | 'active' | 'completed' | 'cancelled'|'string';
     is_couple_session: boolean;
+    session_type: 'chat' | 'video';
     notes: string;
     meetLink: string;
     startedAt: string | null;

@@ -6,6 +6,7 @@ interface ActionButtonProps {
   onClick: () => void;
   variant: "primary" | "secondary" | "outline" | "danger" | "success" | "info";
   fullWidth?: boolean;
+  disabled?: boolean;
 }
 
 export function ActionButton({ 
