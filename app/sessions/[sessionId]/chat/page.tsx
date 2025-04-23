@@ -6,6 +6,7 @@ import Sidebar from "@/components/sidebar/page";
 import Loader from "@/components/loader";
 import { FaPaperPlane, FaPaperclip, FaArrowLeft } from "react-icons/fa6";
 import { JSX } from "react/jsx-runtime";
+import { sendMessage } from "@/utils/ChatSession/fetchChats";
 
 interface Message {
   id: string;
@@ -77,16 +78,27 @@ export default function ChatSessionPage(): JSX.Element {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-    
+
     const sessionId = params.sessionId as string;
     try {
-      // TODO: Implement actual API call
-      console.log("Sending message:", newMessage);
-      setNewMessage("");
-      await fetchMessages();
-      scrollToBottom();
+      const messageData = {
+        chat_session_id: sessionId,
+        sender_id: "counsellor_id", // TODO: Replace with actual counsellor ID
+        message: newMessage,
+        media: null, // For now, no media support
+      };
+
+      const response = await sendMessage(messageData);
+
+      if (response.success) {
+        setNewMessage("");
+        await fetchMessages(); // Refresh messages after successful send
+        scrollToBottom();
+      } else {
+        console.error("Failed to send message:", response.message);
+      }
     } catch (error) {
-      console.error("Failed to send message:", error);
+      console.error("Error sending message:", error);
     }
   };
 
@@ -150,7 +162,7 @@ export default function ChatSessionPage(): JSX.Element {
         </div>
 
         {/* Messages Area with Improved Scrolling */}
-        <div 
+        <div
           ref={messageContainerRef}
           className="flex-1 overflow-y-auto scroll-smooth p-4 space-y-4"
         >
@@ -177,7 +189,7 @@ export default function ChatSessionPage(): JSX.Element {
                     loading="lazy"
                   />
                 )}
-                <p 
+                <p
                   className={`text-xs mt-1 ${
                     msg.is_counsellor ? "text-gray-500" : "text-indigo-100"
                   }`}

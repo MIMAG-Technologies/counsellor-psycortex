@@ -9,7 +9,9 @@ import { UserProfileCard } from "@/components/sessions/UserProfileCard";
 import { SessionDetailsCard } from "@/components/sessions/sessionDetailsCard";
 import { CaseHistoryModal } from "@/components/Modals/casehistory";
 import { CaseHistory } from "@/types/casehistory/case";
-
+import { MarkManagement } from "@/utils/ChatSession/MarkManagement";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 export default function SessionDetailsPage() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -21,7 +23,7 @@ export default function SessionDetailsPage() {
   const [caseHistories, setCaseHistories] = useState<CaseHistory[]>([]);
   const [caseHistoryLoading, setCaseHistoryLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const {user}=useAuth();
   const handleSubmitCase = () => {
     console.log("Submit case clicked");
   };
@@ -52,8 +54,18 @@ export default function SessionDetailsPage() {
     }
   };
 
-  const handleMarkComplete = () => {
-    console.log("Mark complete clicked");
+  const handleMarkComplete = async () => {
+    if (!user?.uid || !sessionDetails?.id) {
+      console.error("Missing user ID or session ID");
+      return;
+    }
+    const res = await MarkManagement({ counsellorId: user.uid, chatId: sessionDetails.id });
+    if(res){
+      toast.success("Session marked as complete successfully!");
+    }
+    else{
+      toast.error("Failed to mark session as complete.");
+    }
   };
 
   const handleRecommendTest = () => {
