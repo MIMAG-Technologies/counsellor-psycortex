@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import { useState } from 'react';
 import { IndividualSlotLeave } from '@/types/ScheduleLeave/individualslot';
 import { applyIndividualLeave } from '@/utils/ScheduleLeave/slotleave'; // Updated import path
@@ -37,17 +37,19 @@ export function IndividualLeaveForm({
       };
 
       const response = await applyIndividualLeave(data);
+
       if (response.success) {
         toast.success('Leave applied successfully');
         onSuccess();
+        onClose();
       } else {
         toast.error(response.message || 'Failed to apply leave');
       }
     } catch (error) {
-      toast.error('Failed to apply leave');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to apply leave';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
-      onClose();
     }
   };
 
