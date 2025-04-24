@@ -93,6 +93,7 @@ const Dashboard = () => {
     };
 
     loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [me]);
 
   if (loading) {

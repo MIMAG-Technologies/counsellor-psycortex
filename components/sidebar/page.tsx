@@ -6,7 +6,7 @@ import {
   FaBars,
   FaTimes,
   FaHome,
-  FaStar,
+  
   FaCalendarAlt,
   FaClock,
   FaUser,

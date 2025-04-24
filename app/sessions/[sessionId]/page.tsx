@@ -213,7 +213,7 @@ export default function SessionDetailsPage() {
             loading={caseHistoryLoading}
           />
         )}
-        {showCaseHistoryForm && sessionDetails && user?.uid && (
+        {showCaseHistoryForm && sessionDetails && user?.uid && userDetails && (
           <CaseHistoryForm
             userId={userDetails.id}
             sessionId={sessionDetails.id}

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FaUser, FaEnvelope, FaPhone } from "react-icons/fa6";
 import { UserDetails } from "@/types/sessiondetails/details";
 
