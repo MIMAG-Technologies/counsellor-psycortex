@@ -12,6 +12,8 @@ import { CaseHistory } from "@/types/casehistory/case";
 import { MarkManagement } from "@/utils/ChatSession/MarkManagement";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
+import { CaseHistoryForm } from "@/components/casehistory/CaseHistoryForm";
+
 export default function SessionDetailsPage() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -22,10 +24,16 @@ export default function SessionDetailsPage() {
   const [showCaseHistory, setShowCaseHistory] = useState(false);
   const [caseHistories, setCaseHistories] = useState<CaseHistory[]>([]);
   const [caseHistoryLoading, setCaseHistoryLoading] = useState(false);
+  const [showCaseHistoryForm, setShowCaseHistoryForm] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const {user}=useAuth();
+  const { user } = useAuth();
+
   const handleSubmitCase = () => {
-    console.log("Submit case clicked");
+    if (!user?.uid || !sessionDetails?.id || !userDetails?.id) {
+      toast.error("Missing required information");
+      return;
+    }
+    setShowCaseHistoryForm(true);
   };
 
   const handleViewCase = async () => {
@@ -60,10 +68,9 @@ export default function SessionDetailsPage() {
       return;
     }
     const res = await MarkManagement({ counsellorId: user.uid, chatId: sessionDetails.id });
-    if(res){
+    if (res) {
       toast.success("Session marked as complete successfully!");
-    }
-    else{
+    } else {
       toast.error("Failed to mark session as complete.");
     }
   };
@@ -198,6 +205,15 @@ export default function SessionDetailsPage() {
               setCaseHistories([]);
             }}
             loading={caseHistoryLoading}
+          />
+        )}
+        {showCaseHistoryForm && sessionDetails && user?.uid && (
+          <CaseHistoryForm
+            userId={userDetails.id}
+            sessionId={sessionDetails.id}
+            sessionType={sessionDetails.session_type}
+            counsellorId={user.uid}
+            onClose={() => setShowCaseHistoryForm(false)}
           />
         )}
       </div>
