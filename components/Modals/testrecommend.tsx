@@ -57,8 +57,8 @@ export function TestRecommendModal({ userId, counsellorId, onClose }: TestRecomm
   };
 
   return (
-    <div className="fixed inset-0 backdrop-blur-[12px] bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl">
+    <div className="fixed inset-0 backdrop-blur-[12px] bg-black/30 flex items-start justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl my-8">
         {/* Header */}
         <div className="bg-indigo-500 px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <h2 className="text-xl font-semibold text-white">Recommend Test</h2>
@@ -78,22 +78,31 @@ export function TestRecommendModal({ userId, counsellorId, onClose }: TestRecomm
               <label className="block text-sm font-medium text-gray-700">
                 Select Test
               </label>
-              <select
-                value={selectedTest}
-                onChange={(e) => setSelectedTest(e.target.value)}
-                className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              >
-                <option value="">Choose a test...</option>
-                {tests.map((test) => (
-                  <option key={test.slug} value={test.slug}>
-                    {test.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative z-[60]">
+                <select
+                  value={selectedTest}
+                  onChange={(e) => setSelectedTest(e.target.value)}
+                  className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                >
+                  <option value="">Choose a test...</option>
+                  {tests.map((test) => (
+                    <option key={test.slug} value={test.slug} className="py-2">
+                      {test.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              </div>
 
               {selectedTest && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  {tests.find(t => t.slug === selectedTest)?.description}
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg max-h-[200px] overflow-y-auto">
+                  <p className="text-sm text-gray-600">
+                    {tests.find(t => t.slug === selectedTest)?.description}
+                  </p>
                 </div>
               )}
             </div>
@@ -101,7 +110,7 @@ export function TestRecommendModal({ userId, counsellorId, onClose }: TestRecomm
         </div>
 
         {/* Footer */}
-        <div className="border-t border-gray-100 px-6 py-4 flex justify-end gap-3">
+        <div className="border-t border-gray-100 px-6 py-4 flex justify-end gap-3 bg-white rounded-b-2xl">
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
