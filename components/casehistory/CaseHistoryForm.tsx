@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CaseHistoryFormData } from '@/types/casehistory/casehistoryform';
 import { submitCaseHistory } from '@/utils/ChatSession/CaseHistorySubmit';
 import { toast } from 'react-toastify';
+import { FaTimes } from 'react-icons/fa';
 
 interface CaseHistoryFormProps {
   userId: string;
@@ -162,7 +163,6 @@ export function CaseHistoryForm({
   ];
 
   const getFieldValue = (field: FormField, data: CaseHistoryFormData): string => {
-    // Ensure field.type matches the FormField interface
     const value = data[field.name as keyof CaseHistoryFormData];
     if (typeof value === 'boolean') {
       return value ? 'true' : 'false';
@@ -189,109 +189,148 @@ export function CaseHistoryForm({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-        {/* Form Header */}
-        <div className="p-6 border-b flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Submit Case History</h2>
-          <div className="text-sm text-gray-500">
-            Step {currentStep + 1} of {formSections.length}
+    <div className="fixed inset-0 backdrop-blur-[12px] bg-black/30 flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl w-full max-w-4xl min-h-[80vh] max-h-[90vh] overflow-hidden shadow-2xl">
+        {/* Header with Progress */}
+        <div className="bg-indigo-500 px-6 py-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-white">Submit Case History</h2>
+            <button 
+              onClick={onClose}
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              <FaTimes className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-indigo-100 text-sm">
+              {formSections[currentStep].title}
+            </p>
+            <div className="text-indigo-100 text-sm">
+              Step {currentStep + 1} of {formSections.length}
+            </div>
+          </div>
+          {/* Progress Bar */}
+          <div className="mt-4 h-1 bg-indigo-400/30 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-white transition-all duration-300 ease-out"
+              style={{ width: `${((currentStep + 1) / formSections.length) * 100}%` }}
+            />
           </div>
         </div>
 
-        {/* Form Fields */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
-          <h3 className="text-lg font-medium mb-4">{formSections[currentStep].title}</h3>
-          {formSections[currentStep].fields.map((field) => (
-            <div key={field.name} className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {field.label}
-              </label>
-              {field.type === "select" ? (
-                <select
-                  value={getFieldValue(field, formData)}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    [field.name]: e.target.value
-                  }))}
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                >
-                  {field.options?.map(option => (
-                    <option key={option} value={option}>
-                      {option.charAt(0).toUpperCase() + option.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              ) : field.type === "textarea" ? (
-                <textarea
-                  value={getFieldValue(field, formData)}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    [field.name]: e.target.value
-                  }))}
-                  rows={4}
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-              ) : field.type === "checkbox" ? (
-                <input
-                  type="checkbox"
-                  checked={!!formData[field.name as keyof typeof formData]}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    [field.name]: e.target.checked
-                  }))}
-                  className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-              ) : (
-                <input
-                  type={field.type}
-                  value={getFieldValue(field, formData)}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    [field.name]: e.target.value
-                  }))}
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-              )}
-            </div>
-          ))}
+        {/* Form Content */}
+        <div className="p-8 overflow-y-auto max-h-[calc(90vh-12rem)]">
+          <div className="space-y-6">
+            {formSections[currentStep].fields.map((field) => (
+              <div key={field.name} className="grid grid-cols-[200px,1fr] gap-6 items-start">
+                <label className="text-sm font-medium text-gray-700 pt-2">
+                  {field.label}
+                </label>
+                <div>
+                  {field.type === "select" ? (
+                    <select
+                      value={getFieldValue(field, formData)}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        [field.name]: e.target.value
+                      }))}
+                      className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      {field.options?.map(option => (
+                        <option key={option} value={option}>
+                          {option.charAt(0).toUpperCase() + option.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field.type === "textarea" ? (
+                    <textarea
+                      value={getFieldValue(field, formData)}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        [field.name]: e.target.value
+                      }))}
+                      rows={4}
+                      className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    />
+                  ) : field.type === "checkbox" ? (
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={!!formData[field.name as keyof typeof formData]}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          [field.name]: e.target.checked
+                        }))}
+                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">Yes</span>
+                    </div>
+                  ) : (
+                    <input
+                      type={field.type}
+                      value={getFieldValue(field, formData)}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        [field.name]: e.target.value
+                      }))}
+                      className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Form Actions */}
-        <div className="p-6 border-t bg-gray-50 flex justify-between">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <div className="flex gap-2">
+        {/* Footer Actions */}
+        <div className="sticky bottom-0 border-t border-gray-100 bg-white/80 backdrop-blur-md px-8 py-4 flex justify-between items-center">
+          <div className="flex-1">
             {currentStep > 0 && (
               <button
                 type="button"
                 onClick={() => setCurrentStep(prev => prev - 1)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                className="text-gray-600 hover:text-gray-900 font-medium text-sm flex items-center gap-1"
               >
+                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
                 Previous
               </button>
             )}
+          </div>
+          <div className="flex gap-3">
             {currentStep < formSections.length - 1 ? (
               <button
                 type="button"
                 onClick={() => setCurrentStep(prev => prev + 1)}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+                className="px-6 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center gap-1"
               >
                 Next
+                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
               </button>
             ) : (
               <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-indigo-400"
+                className="px-6 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 flex items-center gap-2"
               >
-                {loading ? 'Submitting...' : 'Submit'}
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Submitting...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Submit Case History</span>
+                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </>
+                )}
               </button>
             )}
           </div>
