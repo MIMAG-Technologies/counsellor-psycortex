@@ -8,6 +8,8 @@ import { useAuth } from '@/context/AuthContext'
 import fetchProfile from '@/utils/profile'
 import { CounselorData, CounselorProfileData } from '@/types/profile/profile'
 import { FaVideo, FaCommentDots, FaPhone, FaUser, FaStar, FaThumbsUp, FaCalendarTimes } from "react-icons/fa";
+import { verify } from '@/utils/verify/verify'
+
 
 export interface CounselorStatsResponse {
   success: boolean;
@@ -49,6 +51,8 @@ const Dashboard = () => {
   const [stats, setStats] = useState<CounselorStatsResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [counsellor, setCounsellor] = useState<CounselorData | null>(null);
+  const [isVerified, setIsVerified] = useState<boolean>(false);
+  
   
   const fetchDashboard = async () => {
     try {
@@ -65,7 +69,7 @@ const Dashboard = () => {
   const fetchCounsellorProfile = async () => {
     try {
       if (!me || !me.id) return null;
-      const response = await fetchProfile();
+      const response = await fetchProfile(me.id);
       return response as CounselorProfileData;
     } catch (error) {
       console.error("Error fetching counselor profile:", error);
@@ -88,6 +92,8 @@ const Dashboard = () => {
       if (profileData && profileData.success) {
         setCounsellor(profileData.data);
       }
+      const isVerified = me ? await verify(me.id) : false;
+      setIsVerified(isVerified);
       
       setLoading(false);
     };
@@ -131,6 +137,11 @@ const Dashboard = () => {
       <div className="flex-1 ml-16 md:ml-64 p-6 bg-white">
         <div className="flex justify-between items-center mb-6">
           <div className="flex flex-col">
+            
+              {isVerified && <button>
+                Verify</button>}
+              
+            
             <h1 className="text-2xl font-semibold text-gray-600">Counselor Dashboard</h1>
             {counsellor && (
               <p className="text-gray-500">

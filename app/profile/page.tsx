@@ -6,14 +6,17 @@ import { CounselorData } from '../../types/profile/profile';
 import fetchProfile from '../../utils/profile';
 import Loader from '../../components/loader';
 import Sidebar from '../../components/sidebar/page';
-
+import { useAuth } from '@/context/AuthContext';
 
 export default function CounselorProfilePage() {
   const [data, setData] = useState<CounselorData | null>(null);
-
+  const { me }: { me: { id: string | null } | null } = useAuth();
   useEffect(() => {
     const fetchData = async () => {
-      const profileData = await fetchProfile();
+      if (!me || me.id === null) {
+        return;
+      }
+      const profileData = await fetchProfile(me.id);
       if (profileData && profileData.success) {
         setData(profileData.data);
       } else {
@@ -21,7 +24,7 @@ export default function CounselorProfilePage() {
       }
     };
     fetchData();
-  }, []);
+  }, [me]);
 
   if (!data) return <Loader/>;
 
