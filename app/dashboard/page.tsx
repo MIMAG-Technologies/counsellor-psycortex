@@ -90,7 +90,7 @@ const Dashboard = () => {
       const authWindow = window.open(
         authUrl,
         'Verify Account',
-        'width=600,height=700'
+        'width=600,height=700,left=50,top=50'
       );
 
       // Check periodically if verification is complete
@@ -181,11 +181,12 @@ const Dashboard = () => {
       <Sidebar />
       <div className="flex-1 ml-16 md:ml-64 p-6 bg-white">
         <div className="flex justify-between items-center mb-6">
-          <div className="flex flex-col">
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-semibold text-gray-600">Counselor Dashboard</h1>
             {!isVerified && (
               <button
                 onClick={handleVerification}
-                className="mb-4 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 flex items-center gap-2 transition-colors"
+                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2 transition-colors text-sm"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
@@ -195,13 +196,12 @@ const Dashboard = () => {
                 Verify Account
               </button>
             )}
-            <h1 className="text-2xl font-semibold text-gray-600">Counselor Dashboard</h1>
-            {counsellor && (
-              <p className="text-gray-500">
-                Welcome back, {counsellor.personalInfo.name}
-              </p>
-            )}
           </div>
+          {counsellor && (
+            <p className="text-gray-500">
+              Welcome back, {counsellor.personalInfo.name}
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
