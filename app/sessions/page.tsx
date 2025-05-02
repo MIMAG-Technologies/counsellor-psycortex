@@ -318,7 +318,7 @@ const Sessions = () => {
                 <button 
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeMode === "video" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleModeChange("video")}
@@ -328,7 +328,7 @@ const Sessions = () => {
                 <button 
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeMode === "chat" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleModeChange("chat")}
@@ -338,7 +338,7 @@ const Sessions = () => {
                 <button 
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeMode === "in-person" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleModeChange("in-person")}
@@ -354,7 +354,7 @@ const Sessions = () => {
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeStatus === "upcoming" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleStatusChange("upcoming")}
@@ -364,7 +364,7 @@ const Sessions = () => {
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeStatus === "ongoing" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleStatusChange("ongoing")}
@@ -374,7 +374,7 @@ const Sessions = () => {
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeStatus === "completed" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleStatusChange("completed")}
@@ -384,7 +384,7 @@ const Sessions = () => {
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeStatus === "cancelled" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleStatusChange("cancelled")}
@@ -394,7 +394,7 @@ const Sessions = () => {
                 <button 
                   className={`px-3 py-1.5 rounded-md transition duration-200 text-sm ${
                     activeStatus === "expired" 
-                      ? "bg-purple-500 text-white" 
+                      ? "bg-indigo-500 text-white" 
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                   onClick={() => handleStatusChange("expired")}
