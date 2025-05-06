@@ -26,9 +26,6 @@ export function CaseHistoryForm({
   counsellorId,
   onClose
 }: CaseHistoryFormProps) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [loading, setLoading] = useState(false);
-
   const initialFormData: CaseHistoryFormData = {
     user_id: userId,
     session_id: sessionId,
@@ -74,8 +71,10 @@ export function CaseHistoryForm({
     advice_activities: '',
     follow_up_session: ''
   };
-
+  const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<CaseHistoryFormData>(initialFormData);
+
 
   const formSections: { title: string; fields: FormField[] }[] = [
     {
@@ -84,10 +83,9 @@ export function CaseHistoryForm({
         { name: "address", label: "Address", type: "textarea" },
         { name: "education", label: "Education", type: "text" },
         { name: "occupation", label: "Occupation", type: "text" },
-        { name: "marital_status", label: "Marital Status", type: "select", 
-          options: ["single", "married", "divorced", "widowed"] },
+        { name: "marital_status", label: "Marital Status", type: "text" },
         { name: "family_type", label: "Family Type", type: "select",
-          options: ["nuclear", "joint", "extended"] },
+          options: ["nuclear", "extended", "sub-urban", "living_alone", "other"] },
         { name: "family_members", label: "Family Members", type: "text" }
       ]
     },
@@ -174,11 +172,11 @@ export function CaseHistoryForm({
     setLoading(true);
     try {
       const response = await submitCaseHistory(formData);
-      if (response.success) {
+      if (response) {
         toast.success('Case history submitted successfully');
         onClose();
       } else {
-        toast.error(response.message || 'Failed to submit case history');
+        toast.error('Failed to submit case history');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -194,8 +192,10 @@ export function CaseHistoryForm({
         {/* Header with Progress */}
         <div className="bg-indigo-500 px-6 py-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-white">Submit Case History</h2>
-            <button 
+            <h2 className="text-xl font-semibold text-white">
+              Submit Case History
+            </h2>
+            <button
               onClick={onClose}
               className="text-white/80 hover:text-white transition-colors"
             >
@@ -212,9 +212,11 @@ export function CaseHistoryForm({
           </div>
           {/* Progress Bar */}
           <div className="mt-4 h-1 bg-indigo-400/30 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-white transition-all duration-300 ease-out"
-              style={{ width: `${((currentStep + 1) / formSections.length) * 100}%` }}
+              style={{
+                width: `${((currentStep + 1) / formSections.length) * 100}%`,
+              }}
             />
           </div>
         </div>
@@ -223,7 +225,10 @@ export function CaseHistoryForm({
         <div className="p-8 overflow-y-auto max-h-[calc(90vh-12rem)]">
           <div className="space-y-6">
             {formSections[currentStep].fields.map((field) => (
-              <div key={field.name} className="grid grid-cols-[200px,1fr] gap-6 items-start">
+              <div
+                key={field.name}
+                className="grid grid-cols-[200px,1fr] gap-6 items-start"
+              >
                 <label className="text-sm font-medium text-gray-700 pt-2">
                   {field.label}
                 </label>
@@ -231,13 +236,15 @@ export function CaseHistoryForm({
                   {field.type === "select" ? (
                     <select
                       value={getFieldValue(field, formData)}
-                      onChange={(e) => setFormData(prev => ({
-                        ...prev,
-                        [field.name]: e.target.value
-                      }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          [field.name]: e.target.value,
+                        }))
+                      }
                       className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     >
-                      {field.options?.map(option => (
+                      {field.options?.map((option) => (
                         <option key={option} value={option}>
                           {option.charAt(0).toUpperCase() + option.slice(1)}
                         </option>
@@ -246,10 +253,12 @@ export function CaseHistoryForm({
                   ) : field.type === "textarea" ? (
                     <textarea
                       value={getFieldValue(field, formData)}
-                      onChange={(e) => setFormData(prev => ({
-                        ...prev,
-                        [field.name]: e.target.value
-                      }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          [field.name]: e.target.value,
+                        }))
+                      }
                       rows={4}
                       className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     />
@@ -257,11 +266,15 @@ export function CaseHistoryForm({
                     <div className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={!!formData[field.name as keyof typeof formData]}
-                        onChange={(e) => setFormData(prev => ({
-                          ...prev,
-                          [field.name]: e.target.checked
-                        }))}
+                        checked={
+                          !!FormData[field.name as keyof typeof FormData]
+                        }
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            [field.name]: e.target.checked,
+                          }))
+                        }
                         className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                       />
                       <span className="ml-2 text-sm text-gray-600">Yes</span>
@@ -270,10 +283,12 @@ export function CaseHistoryForm({
                     <input
                       type={field.type}
                       value={getFieldValue(field, formData)}
-                      onChange={(e) => setFormData(prev => ({
-                        ...prev,
-                        [field.name]: e.target.value
-                      }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          [field.name]: e.target.value,
+                        }))
+                      }
                       className="w-full rounded-lg border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                     />
                   )}
@@ -289,11 +304,19 @@ export function CaseHistoryForm({
             {currentStep > 0 && (
               <button
                 type="button"
-                onClick={() => setCurrentStep(prev => prev - 1)}
+                onClick={() => setCurrentStep((prev) => prev - 1)}
                 className="text-gray-600 hover:text-gray-900 font-medium text-sm flex items-center gap-1"
               >
-                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 Previous
               </button>
@@ -303,12 +326,20 @@ export function CaseHistoryForm({
             {currentStep < formSections.length - 1 ? (
               <button
                 type="button"
-                onClick={() => setCurrentStep(prev => prev + 1)}
+                onClick={() => setCurrentStep((prev) => prev + 1)}
                 className="px-6 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center gap-1"
               >
                 Next
-                <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-4 h-4"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
             ) : (
@@ -326,8 +357,16 @@ export function CaseHistoryForm({
                 ) : (
                   <>
                     <span>Submit Case History</span>
-                    <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    <svg
+                      className="w-4 h-4"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </>
                 )}

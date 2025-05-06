@@ -84,7 +84,7 @@ export function SessionDetailsCard({ sessionDetails, userDetails, handlers }: Se
 
         <button
           onClick={handleJoinSession}
-          disabled={isUpcoming || !userId || !isActive}
+          // disabled={isUpcoming || !userId || !isActive}
           className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg 
             ${isUpcoming || !userId || !isActive
               ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 

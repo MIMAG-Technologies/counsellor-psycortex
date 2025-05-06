@@ -9,6 +9,8 @@ import Loader from "@/components/loader";
 import { FaPaperPlane, FaPaperclip, FaArrowLeft } from "react-icons/fa6";
 import { JSX } from "react/jsx-runtime";
 import { sendMessage } from "@/utils/ChatSession/fetchChats";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 
 interface Message {
   id: string;
@@ -37,6 +39,20 @@ export default function ChatSessionPage(): JSX.Element {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Check file size (e.g., 10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("File size should be less than 10MB");
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const { me } = useAuth();
 
   const scrollToBottom = () => {
     if (messagesEndRef.current && messageContainerRef.current) {
@@ -79,35 +95,63 @@ export default function ChatSessionPage(): JSX.Element {
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() && !selectedFile) return;
 
     const sessionId = params.sessionId as string;
     try {
       const messageData = {
         chat_session_id: sessionId,
-        sender_id: "counsellor_id", // TODO: Replace with actual counsellor ID
+        sender_id: me?.id || "",
         message: newMessage,
-        media: null, // For now, no media support
+        media: selectedFile,
       };
 
       const response = await sendMessage(messageData);
 
-      if (response.success) {
+      if (response) {
         setNewMessage("");
+        setSelectedFile(null);
         await fetchMessages(); // Refresh messages after successful send
         scrollToBottom();
       } else {
-        console.error("Failed to send message:", response.message);
+        throw new Error("Failed to send message");
       }
     } catch (error) {
       console.error("Error sending message:", error);
+
+      // Stop polling for new messages
+      if (fetchMessagesInterval) {
+        clearInterval(fetchMessagesInterval);
+      }
+
+      // Add the message to the list
+      const tempMessage: Message = {
+        id: Date.now().toString(),
+        sender_id: me?.id || "",
+        sender_name: me?.name || "You",
+        is_counsellor: false,
+        message_type: selectedFile ? "media" : "text",
+        message: newMessage,
+        media_url: selectedFile ? URL.createObjectURL(selectedFile) : null,
+        is_read: false,
+        created_at: new Date().toISOString(),
+      };
+
+      setMessages((prevMessages) => [...prevMessages, tempMessage]);
+      setNewMessage("");
+      setSelectedFile(null);
     }
   };
 
+  // Add a reference to the polling interval
+  let fetchMessagesInterval: NodeJS.Timeout | null = null;
+
   useEffect(() => {
     fetchMessages();
-    const interval = setInterval(fetchMessages, POLLING_INTERVAL);
-    return () => clearInterval(interval);
+    fetchMessagesInterval = setInterval(fetchMessages, POLLING_INTERVAL);
+    return () => {
+      if (fetchMessagesInterval) clearInterval(fetchMessagesInterval);
+    };
   }, [params]);
 
   useEffect(() => {
@@ -154,7 +198,9 @@ export default function ChatSessionPage(): JSX.Element {
                 <FaArrowLeft className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-2xl font-semibold text-white">Chat Session</h1>
+                <h1 className="text-2xl font-semibold text-white">
+                  Chat Session
+                </h1>
                 <p className="text-indigo-100 text-sm mt-1">
                   Session ID: {params.sessionId}
                 </p>
@@ -171,7 +217,9 @@ export default function ChatSessionPage(): JSX.Element {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.is_counsellor ? "justify-start" : "justify-end"}`}
+              className={`flex ${
+                msg.is_counsellor ? "justify-start" : "justify-end"
+              }`}
             >
               <div
                 className={`max-w-[70%] p-3 rounded-lg ${
@@ -206,32 +254,54 @@ export default function ChatSessionPage(): JSX.Element {
 
         {/* Message Input */}
         <div className="border-t border-gray-200 bg-white p-4">
-          <div className="flex items-center gap-2 max-w-4xl mx-auto">
-            <button
-              className="p-2 text-gray-500 hover:text-purple-500 transition-colors"
-              onClick={() => console.log("Attachment feature coming soon")}
-            >
-              <FaPaperclip className="w-5 h-5" />
-            </button>
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-              placeholder="Type your message..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
-            <button
-              onClick={handleSendMessage}
-              disabled={!newMessage.trim()}
-              className={`p-2 rounded-lg transition-colors ${
-                newMessage.trim()
-                  ? "bg-indigo-500 text-white hover:bg-indigo-600"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
-              }`}
-            >
-              <FaPaperPlane className="w-5 h-5" />
-            </button>
+          <div className="flex flex-col gap-2 max-w-4xl mx-auto">
+            {/* Image Preview */}
+            {selectedFile && (
+              <div className="relative w-full max-w-xs">
+                <img
+                  src={URL.createObjectURL(selectedFile)}
+                  alt="Selected"
+                  className="w-full h-auto rounded-lg border"
+                />
+                <button
+                  onClick={() => setSelectedFile(null)}
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                >
+                  X
+                </button>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2">
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileSelect}
+                  accept="image/*"
+                />
+                <FaPaperclip className="w-5 h-5 text-gray-500 hover:text-purple-500 transition-colors" />
+              </label>
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                placeholder="Type your message..."
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={!newMessage.trim() && !selectedFile}
+                className={`p-2 rounded-lg transition-colors ${
+                  newMessage.trim() || selectedFile
+                    ? "bg-indigo-500 text-white hover:bg-indigo-600"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                <FaPaperPlane className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

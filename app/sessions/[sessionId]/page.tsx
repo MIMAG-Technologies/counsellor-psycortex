@@ -28,7 +28,7 @@ export default function SessionDetailsPage() {
   const [showCaseHistoryForm, setShowCaseHistoryForm] = useState(false);
   const [showRecommendTest, setShowRecommendTest] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const { user , me } = useAuth();
 
   const handleSubmitCase = () => {
     if (!user?.uid || !sessionDetails?.id || !userDetails?.id) {
@@ -218,14 +218,14 @@ export default function SessionDetailsPage() {
             userId={userDetails.id}
             sessionId={sessionDetails.id}
             sessionType={sessionDetails.session_type}
-            counsellorId={user.uid}
+            counsellorId={me?.id || ""}
             onClose={() => setShowCaseHistoryForm(false)}
           />
         )}
         {showRecommendTest && user?.uid && userDetails && (
           <TestRecommendModal
             userId={userDetails.id}
-            counsellorId={user.uid}
+            counsellorId={me?.id || ""}
             onClose={() => setShowRecommendTest(false)}
           />
         )}

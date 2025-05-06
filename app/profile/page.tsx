@@ -10,7 +10,9 @@ import { useAuth } from '@/context/AuthContext';
 
 export default function CounselorProfilePage() {
   const [data, setData] = useState<CounselorData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
   const { me }: { me: { id: string | null } | null } = useAuth();
+
   useEffect(() => {
     const fetchData = async () => {
       if (!me || me.id === null) {
@@ -26,27 +28,65 @@ export default function CounselorProfilePage() {
     fetchData();
   }, [me]);
 
-  if (!data) return <Loader/>;
+  if (!data) return <Loader />;
 
   const { personalInfo, professionalInfo, practiceInfo, sessionInfo } = data;
 
+  const handleDraftMail = () => {
+    const subject = `Profile Update of ${personalInfo.name}`;
+    window.location.href = `mailto:care@psycortex.in?subject=${encodeURIComponent(subject)}`;
+  };
+
   return (
-    <div className='min-h-screen flex'>
-      <Sidebar /> 
+    <div className="min-h-screen flex">
+      <Sidebar />
 
       <div className="w-full max-w-[1150px] md:ml-80 py-8 ml-16 mx-auto rounded-2xl overflow-hidden">
         {/* Profile Header */}
         <div className="p-8 flex flex-col items-center">
           <div className="w-40 h-40 rounded-full bg-gray-100 flex items-center justify-center mb-6 transition-transform duration-300 hover:scale-105">
-            <img 
-              src={personalInfo.profileImage} 
+            <img
+              src={personalInfo.profileImage}
               alt={`${personalInfo.name} profile`}
               className="w-36 h-36 rounded-full object-cover"
             />
           </div>
           <h1 className="text-3xl font-bold text-indigo-500 mb-2">{personalInfo.name}</h1>
           <p className="text-lg text-indigo-500 font-medium">{professionalInfo.title}</p>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="mt-4 px-6 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
+          >
+            Edit Profile
+          </button>
         </div>
+
+        {/* Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+              <h2 className="text-xl font-semibold text-indigo-500 mb-4">Profile Modification Request</h2>
+              <p className="text-gray-700 mb-6">
+                To update your professional details, please contact our support team with your requested changes. We
+                will verify them and update your information within 24-48 hours.
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={handleDraftMail}
+                  className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
+                >
+                  Draft Mail
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* About Me Section */}
         <div className="p-8 space-y-6">
@@ -55,11 +95,15 @@ export default function CounselorProfilePage() {
           <div className="space-y-4">
             <div className="flex items-center space-x-3 group">
               <MailIcon className="text-indigo-500 group-hover:text-indigo-600 transition-colors" size={24} />
-              <span className='text-lg text-gray-700 font-medium group-hover:text-indigo-500 transition-colors'>{personalInfo.email}</span>
+              <span className="text-lg text-gray-700 font-medium group-hover:text-indigo-500 transition-colors">
+                {personalInfo.email}
+              </span>
             </div>
             <div className="flex items-center space-x-3 group">
               <PhoneIcon className="text-indigo-500 group-hover:text-indigo-600 transition-colors" size={24} />
-              <span className='text-lg text-gray-700 font-medium group-hover:text-indigo-500 transition-colors'>{personalInfo.phone}</span>
+              <span className="text-lg text-gray-700 font-medium group-hover:text-indigo-500 transition-colors">
+                {personalInfo.phone}
+              </span>
             </div>
           </div>
         </div>

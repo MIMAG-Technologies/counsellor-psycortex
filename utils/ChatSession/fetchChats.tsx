@@ -32,13 +32,8 @@ export const sendMessage = async ({
   
     try {
       await axios.post(
-        `${baseUrl}/psycortex-backend/chats/send_message.php`,
+        `${baseUrl}/chats/send_message.php`,
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
       );
       return true;
     } catch (error) {

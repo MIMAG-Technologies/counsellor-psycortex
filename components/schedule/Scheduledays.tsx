@@ -41,7 +41,7 @@ const CounselorSchedule: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const calendarRef = useRef<HTMLDivElement>(null);
   const { me } = useAuth();
-  const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://backend.psycortex.in/';
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://php.psycortex.in/api/';
   const [showIndividualLeave, setShowIndividualLeave] = useState(false);
   const [showMultiDayLeave, setShowMultiDayLeave] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{ date: string; time: string } | null>(null);
@@ -169,11 +169,13 @@ const CounselorSchedule: React.FC = () => {
           {timeSlots.map(slot => {
             const available = isSlotAvailable(slot, dayData.slots);
             return (
-              <div
+                <div
                 key={slot}
-                className={`rounded-lg p-4 border transition-all ${available ? 'border-gray-200 bg-gray-50' : 'border-gray-200 bg-gray-50'}`}
-                onClick={() => handleSlotClick(dayData.date, slot)}
-              >
+                className={`rounded-lg p-4 border transition-all ${
+                  available ? 'border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100' : 'border-gray-200 bg-gray-100'
+                }`}
+                onClick={() => available && handleSlotClick(dayData.date, slot)}
+                >
                 <div className="text-base md:text-lg font-medium text-center text-gray-800 mb-2">
                   {formatTime(slot)}
                 </div>
@@ -181,7 +183,7 @@ const CounselorSchedule: React.FC = () => {
                   ${available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {available ? 'Available' : 'Booked'}
                 </div>
-              </div>
+                </div>
             );
           })}
         </div>
