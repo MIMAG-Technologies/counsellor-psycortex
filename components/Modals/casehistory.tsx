@@ -13,7 +13,7 @@ export function CaseHistoryModal({ histories, onClose, loading }: CaseHistoryMod
 
   const handleCaseClick = (caseId: number) => {
     router.push(`/case-history/${caseId}`);
-    onClose(); // Close the modal after navigation
+    onClose();
   };
 
   return (
