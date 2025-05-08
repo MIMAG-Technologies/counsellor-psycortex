@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CounselorStatsResponse } from "@/app/dashboard/types";
+import { CounselorStatsResponse } from "@/app/(authenticated)/dashboard/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
