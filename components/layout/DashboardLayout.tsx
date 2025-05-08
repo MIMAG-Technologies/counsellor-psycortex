@@ -8,7 +8,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const pathname = usePathname();
-  const isChatRoute = /^\/sessions\/chat_[^/]+\/chat$/.test(pathname || '');
+  const isChatRoute = pathname.includes("/sessions/chat");
   return (
     <div className="flex min-h-screen bg-white">
       {!isChatRoute && <Sidebar />}

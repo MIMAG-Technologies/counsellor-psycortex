@@ -29,7 +29,7 @@ export function SessionActions({ sessionDetails, handlers }: SessionActionsProps
 
   const handleJoin = () => {
     if (isChat) {
-      router.push(`/sessions/${sessionDetails.id}/chat`);
+      router.push(`/sessions/chat?sessionId=${sessionDetails.id}`);
     } else if (sessionDetails.meetLink) {
       window.open(sessionDetails.meetLink, '_blank');
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Sidebar from "@/components/sidebar";
 import Loader from "@/components/loader";
 import { UserDetails, SessionDetails } from "@/types/sessiondetails/details";
@@ -16,8 +16,8 @@ import { CaseHistoryForm } from "@/components/casehistory/CaseHistoryForm";
 import { TestRecommendModal } from "@/components/Modals/testrecommend";
 
 export default function SessionDetailsPage() {
-  const params = useParams();
   const searchParams = useSearchParams();
+  const sessionId = searchParams.get("sessionId");
 
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
@@ -95,7 +95,7 @@ export default function SessionDetailsPage() {
   useEffect(() => {
     const fetchData = async () => {
       const searchUserId = searchParams.get("userId");
-      if (!searchUserId || !params.sessionId) {
+      if (!searchUserId || !sessionId) {
         setError("Missing user ID or session ID");
         setLoading(false);
         return;
@@ -123,7 +123,7 @@ export default function SessionDetailsPage() {
 
         if (chatData.success && chatData.sessions) {
           const chatSession = chatData.sessions.find(
-            (s: SessionDetails) => s.id === params.sessionId
+            (s: SessionDetails) => s.id === sessionId
           );
 
           if (chatSession) {
@@ -141,7 +141,7 @@ export default function SessionDetailsPage() {
 
         if (counsellingData.success) {
           const videoSession = counsellingData.sessions.find(
-            (s: SessionDetails) => s.id === params.sessionId
+            (s: SessionDetails) => s.id === sessionId
           );
 
           if (videoSession) {
@@ -165,7 +165,7 @@ export default function SessionDetailsPage() {
     };
 
     fetchData();
-  }, [searchParams, params.sessionId]);
+  }, [searchParams, sessionId]);
 
   if (loading) {
     return (
@@ -231,4 +231,4 @@ export default function SessionDetailsPage() {
       </div>
     </div>
   );
-}
+} 

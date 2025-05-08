@@ -52,7 +52,7 @@ const SessionCard: React.FC<SessionCardProps> = ({
   }
 
   const handleClick = () => {
-    router.push(`/sessions/${session.id}?userId=${session.user.id}`);
+    router.push(`/sessions/details?sessionId=${session.id}&userId=${session.user.id}`);
   };
 
   return (

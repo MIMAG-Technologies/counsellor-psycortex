@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Sidebar from "@/components/sidebar";
 import Loader from "@/components/loader";
 
@@ -80,7 +80,8 @@ interface CaseHistoryDetail {
 }
 
 export default function CaseHistoryDetailPage() {
-  const params = useParams();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const [loading, setLoading] = useState(true);
   const [caseDetail, setCaseDetail] = useState<CaseHistoryDetail | null>(null);
   const [activeTab, setActiveTab] = useState("medical");
@@ -90,7 +91,7 @@ export default function CaseHistoryDetailPage() {
       try {
         const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
         const response = await fetch(
-          `${BASE_URL}/user/get_single_case_history.php?id=${params.id}`
+          `${BASE_URL}/user/get_single_case_history.php?id=${id}`
         );
         const data = await response.json();
 
@@ -104,10 +105,10 @@ export default function CaseHistoryDetailPage() {
       }
     };
 
-    if (params.id) {
+    if (id) {
       fetchCaseDetail();
     }
-  }, [params.id]);
+  }, [id]);
 
   const DataItem = ({ label, value }: { label: string; value: string | number | undefined }) => (
     <div className="mb-5">
@@ -290,24 +291,24 @@ export default function CaseHistoryDetailPage() {
                   </div>
                   <h2 className="text-lg font-medium text-gray-800">Medical History</h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="bg-indigo-50 rounded-lg p-5 border border-indigo-100">
                     <h3 className="text-base font-medium text-indigo-700 mb-3">Chief Complaints</h3>
                     <p className="text-base text-gray-700">{caseDetail.case_history.medical_history.chief_complaints || "—"}</p>
                   </div>
-                  
+
                   <div>
                     <DataItem label="Present Illness History" value={caseDetail.case_history.medical_history.present_illness_history} />
                     <DataItem label="Treatment History" value={caseDetail.case_history.medical_history.treatment_history} />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                   <DataItem label="Past Illness History" value={caseDetail.case_history.medical_history.past_illness_history} />
                   <DataItem label="Family History" value={caseDetail.case_history.medical_history.family_history} />
                 </div>
-                
+
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-base font-medium text-gray-700">Previous Consultations</h3>
@@ -315,7 +316,7 @@ export default function CaseHistoryDetailPage() {
                       {caseDetail.case_history.previous_consultation ? "Yes" : "No"}
                     </span>
                   </div>
-                  
+
                   {caseDetail.case_history.previous_consultation && (
                     <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                       <p className="text-base text-gray-700">{caseDetail.case_history.previous_consultation_details}</p>
@@ -325,7 +326,7 @@ export default function CaseHistoryDetailPage() {
               </div>
             </div>
           )}
-          
+
           {/* Personal History Tab */}
           {activeTab === "personal" && (
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -338,7 +339,7 @@ export default function CaseHistoryDetailPage() {
                   </div>
                   <h2 className="text-lg font-medium text-gray-800">Personal History</h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6">
                   <div>
                     <DataItem label="Childhood Disorders" value={caseDetail.case_history.personal_history.childhood_disorders} />
@@ -350,7 +351,7 @@ export default function CaseHistoryDetailPage() {
                     <DataItem label="Premorbid Personality" value={caseDetail.case_history.personal_history.premorbid_personality} />
                   </div>
                 </div>
-                
+
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <div className="bg-gray-50 rounded-lg p-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
@@ -363,16 +364,16 @@ export default function CaseHistoryDetailPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-6">
                   <h3 className="text-base font-medium text-gray-700 mb-3">Identification Marks</h3>
                   <div className="flex flex-wrap gap-2">
-                    {caseDetail.case_history.identification_marks.length > 0 ? 
+                    {caseDetail.case_history.identification_marks.length > 0 ?
                       caseDetail.case_history.identification_marks.map((mark, index) => (
                         <span key={index} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm">
                           {mark}
                         </span>
-                      )) : 
+                      )) :
                       <span className="text-base text-gray-500">None specified</span>
                     }
                   </div>
@@ -380,7 +381,7 @@ export default function CaseHistoryDetailPage() {
               </div>
             </div>
           )}
-          
+
           {/* Mental Status Tab */}
           {activeTab === "mental" && (
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -393,7 +394,7 @@ export default function CaseHistoryDetailPage() {
                   </div>
                   <h2 className="text-lg font-medium text-gray-800">Mental Status Examination</h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div className="p-4 bg-gradient-to-br from-indigo-50 to-white rounded-lg border border-indigo-100">
                     <p className="text-sm font-medium uppercase tracking-wider text-indigo-600 mb-2">General Appearance</p>
@@ -404,19 +405,19 @@ export default function CaseHistoryDetailPage() {
                     <p className="text-base">{caseDetail.case_history.mental_status.mood_affect || "—"}</p>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   <DataItem label="Attitude" value={caseDetail.case_history.mental_status.attitude} />
                   <DataItem label="Motor Behavior" value={caseDetail.case_history.mental_status.motor_behavior} />
                   <DataItem label="Speech" value={caseDetail.case_history.mental_status.speech} />
                 </div>
-                
+
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <div className="flex items-center mb-4">
                     <div className="h-2 w-2 rounded-full bg-indigo-500 mr-2"></div>
                     <h3 className="text-base font-medium text-gray-800">Cognitive Functions</h3>
                   </div>
-                  
+
                   <div className="bg-gray-50 rounded-lg p-5">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {Object.entries(caseDetail.case_history.mental_status.cognitive_functions).map(([key, value]) => (
@@ -430,13 +431,13 @@ export default function CaseHistoryDetailPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-6 pt-6 border-t border-gray-100">
                   <div className="flex items-center mb-4">
                     <div className="h-2 w-2 rounded-full bg-purple-500 mr-2"></div>
                     <h3 className="text-base font-medium text-gray-800">Thought Process</h3>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     {Object.entries(caseDetail.case_history.mental_status.thought_process).map(([key, value]) => (
                       <div key={key} className="bg-purple-50 p-4 rounded-lg border border-purple-100">
@@ -449,7 +450,7 @@ export default function CaseHistoryDetailPage() {
               </div>
             </div>
           )}
-          
+
           {/* Follow Up Tab */}
           {activeTab === "followup" && (
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -462,7 +463,7 @@ export default function CaseHistoryDetailPage() {
                   </div>
                   <h2 className="text-lg font-medium text-gray-800">Follow Up</h2>
                 </div>
-                
+
                 <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-xl p-6 mb-6">
                   <div className="flex items-center mb-4">
                     <svg className="h-5 w-5 mr-2 text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -472,7 +473,7 @@ export default function CaseHistoryDetailPage() {
                   </div>
                   <p className="text-indigo-100 whitespace-pre-line text-base">{caseDetail.case_history.follow_up.advice_activities || "No advice provided"}</p>
                 </div>
-                
+
                 <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-6">
                   <div className="flex items-center mb-4">
                     <svg className="h-5 w-5 mr-2 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
