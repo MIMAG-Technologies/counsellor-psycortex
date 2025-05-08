@@ -193,8 +193,7 @@ export default function SessionDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="ml-16 md:ml-[250px] p-6 max-w-7xl mx-auto">
+      <div className="p-6 max-w-7xl mx-auto">
         {userDetails && <UserProfileCard userDetails={userDetails} />}
         {sessionDetails && userDetails && (
           <SessionDetailsCard

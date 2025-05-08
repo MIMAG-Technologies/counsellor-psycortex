@@ -120,7 +120,7 @@ export default function CaseHistoryDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
-        <div className="ml-16 md:ml-64 flex items-center justify-center min-h-screen">
+        <div className=" flex items-center justify-center min-h-screen">
           <Loader />
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function CaseHistoryDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
-        <div className="ml-16 md:ml-64 p-8 flex items-center justify-center min-h-screen">
+        <div className=" p-8 flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="bg-gray-100 p-6 rounded-full inline-flex items-center justify-center mb-4">
               <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,7 +157,7 @@ export default function CaseHistoryDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="ml-16 md:ml-64 py-8">
+      <div className=" py-8">
         {/* Top Bar */}
         <div className="px-4 md:px-10 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
