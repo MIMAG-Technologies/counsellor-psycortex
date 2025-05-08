@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Sidebar from "@/components/sidebar/page";
+import Sidebar from "@/components/sidebar";
 import Loader from "@/components/loader";
 
 interface CaseHistoryDetail {

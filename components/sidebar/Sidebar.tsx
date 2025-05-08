@@ -11,6 +11,8 @@ import {
   FaUser,
   FaSignOutAlt
 } from "react-icons/fa";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebaseConfig";
 
 interface Route {
   path: string;
@@ -54,10 +56,9 @@ const Sidebar = () => {
     }
   }, [pathname]);
 
-  const handleLogout = () => {
-    // Handle logout logic here
-    console.log('Logging out...');
-    // router.push('/login');
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/login');
   };
 
   return (

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import Sidebar from "@/components/sidebar/page";
+import Sidebar from "@/components/sidebar";
 import Loader from "@/components/loader";
 import { UserDetails, SessionDetails } from "@/types/sessiondetails/details";
 import { UserProfileCard } from "@/components/sessions/UserProfileCard";
