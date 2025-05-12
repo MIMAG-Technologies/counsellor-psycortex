@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
-import { PhoneIcon, MailIcon, Award, Clock, Bookmark, Globe, DollarSign } from 'lucide-react';
+import { PhoneIcon, MailIcon, Award, Clock, Bookmark, Globe, DollarSign, IndianRupee } from 'lucide-react';
 import { CounselorData } from '@/types/profile/profile';
 import { motion } from 'framer-motion';
 import { FaPencil } from 'react-icons/fa6';
@@ -189,7 +189,9 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ data }) => {
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg col-span-2">
                   <p className="text-xs text-gray-500 mb-1">Valid Until</p>
-                  <p className="text-gray-800 font-medium">{license.validUntil}</p>
+                    <p className="text-gray-800 font-medium">
+                    {new Date(license.validUntil).toLocaleDateString('en-GB')}
+                    </p>
                 </div>
               </div>
             </motion.div>
@@ -255,7 +257,7 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ data }) => {
         className="p-8 md:p-12 space-y-6"
       >
         <h2 className="text-2xl font-semibold text-indigo-600 mb-5 flex items-center gap-2">
-          <DollarSign className="text-indigo-500" size={24} />
+          <IndianRupee className="text-indigo-500" size={24} />
           Session Rates
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -270,9 +272,6 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ data }) => {
               </div>
               <div className="p-6 text-center">
                 <p className="text-3xl font-bold text-indigo-600">{rate.price} <span className="text-sm font-normal text-gray-500">{rate.currency}</span></p>
-                <button className="mt-4 w-full py-2 px-4 bg-indigo-100 text-indigo-600 font-medium rounded-lg hover:bg-indigo-200 transition-colors">
-                  Book Session
-                </button>
               </div>
             </motion.div>
           ))}

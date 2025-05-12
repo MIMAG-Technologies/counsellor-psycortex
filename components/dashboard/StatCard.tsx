@@ -46,7 +46,7 @@ const StatCard: React.FC<StatCardProps> = ({
     <div className={`bg-white rounded-xl p-6 shadow-md ${leftBorder ? `border-l-4 ${classes.border}` : 'border border-gray-300'}`}>
       <div className="flex justify-between items-center mb-4">
         <span className="text-gray-800 text-xl">{title}</span>
-        <div className={`${classes.bg} p-2 rounded-lg`}>
+        <div className={`${classes.bg} p-2 rounded-lg flex items-center justify-center`}>
           <div className={`w-6 h-6 ${classes.text}`}>{icon}</div>
         </div>
       </div>
