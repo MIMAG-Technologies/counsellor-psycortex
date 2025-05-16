@@ -67,12 +67,9 @@ export default function BasicDetails({
           <input
             type="email"
             value={counsellor.basicInfo?.email || ''}
-            onChange={(e) => updateCounsellor("basicInfo", {
-              ...counsellor.basicInfo,
-              email: e.target.value
-            })}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
-            placeholder="Enter email"
+            readOnly
+            disabled
+            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed"
           />
         </div>
 
@@ -84,12 +81,9 @@ export default function BasicDetails({
           <input
             type="tel"
             value={counsellor.basicInfo?.phone || ''}
-            onChange={(e) => updateCounsellor("basicInfo", {
-              ...counsellor.basicInfo,
-              phone: e.target.value
-            })}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
-            placeholder="Enter phone number"
+            readOnly
+            disabled
+            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed"
           />
         </div>
 
@@ -105,6 +99,7 @@ export default function BasicDetails({
               ...counsellor.basicInfo,
               dateOfBirth: e.target.value
             })}
+            max={new Date().toISOString().split('T')[0]}
             className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
           />
         </div>
@@ -152,17 +147,28 @@ export default function BasicDetails({
           <label className="block text-sm font-medium text-gray-700">
             Biography
           </label>
-          <textarea
-            value={counsellor.basicInfo?.biography || ''}
-            style={{ resize: "none" }}
-            onChange={(e) => updateCounsellor("basicInfo", {
-              ...counsellor.basicInfo,
-              biography: e.target.value
-            })}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
-            placeholder="Write a short biography"
-            rows={3}
-          />
+          <div className="relative">
+            <textarea
+              value={counsellor.basicInfo?.biography || ''}
+              style={{ resize: "none" }}
+              onChange={(e) => {
+                const text = e.target.value;
+                if (text.length <= 400) {
+                  updateCounsellor("basicInfo", {
+                    ...counsellor.basicInfo,
+                    biography: text
+                  });
+                }
+              }}
+              maxLength={400}
+              className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+              placeholder="Write a short biography (max 400 characters)"
+              rows={3}
+            />
+            <div className="absolute bottom-2 right-2 text-sm text-gray-500">
+              {(counsellor.basicInfo?.biography?.length || 0)}/400
+            </div>
+          </div>
         </div>
       </div>
 

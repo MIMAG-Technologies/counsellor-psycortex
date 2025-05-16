@@ -13,6 +13,19 @@ export default function ProfessionalInfo({
 }) {
   const maxEntries = 20;
 
+  // Validation functions
+  const validateYearsOfExperience = (years: number): boolean => {
+    return years > 0 && years < 100;
+  };
+
+  const validateEducationYear = (year: number): boolean => {
+    return year >= 1000 && year <= 9999 && year <= new Date().getFullYear();
+  };
+
+  const validateLicenseDate = (date: string): boolean => {
+    return new Date(date) > new Date();
+  };
+
   const addEducation = (education: Education) => {
     const updatedEducation = [...(counsellor.professionalInfo?.education || []), education];
     updateCounsellor("professionalInfo", {
@@ -96,14 +109,27 @@ export default function ProfessionalInfo({
           </label>
           <input
             type="number"
+            min="1"
+            max="99"
             value={counsellor.professionalInfo?.yearsOfExperience || ''}
-            onChange={(e) => updateCounsellor("professionalInfo", {
-              ...counsellor.professionalInfo,
-              yearsOfExperience: e.target.value ? parseInt(e.target.value) : 0
-            })}
+            onChange={(e) => {
+              const value = parseInt(e.target.value);
+              if (!e.target.value || validateYearsOfExperience(value)) {
+                updateCounsellor("professionalInfo", {
+                  ...counsellor.professionalInfo,
+                  yearsOfExperience: e.target.value ? value : 0
+                });
+              }
+            }}
             className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="e.g. 5"
           />
+          {(counsellor.professionalInfo?.yearsOfExperience || 0) > 99 && (
+            <p className="text-red-500 text-sm mt-1">Years of experience must be less than 100</p>
+          )}
+          {(counsellor.professionalInfo?.yearsOfExperience || 0) <= 0 && (
+            <p className="text-red-500 text-sm mt-1">Years of experience must be greater than 0</p>
+          )}
         </div>
       </div>
 
@@ -169,11 +195,11 @@ export default function ProfessionalInfo({
               <input
                 type="number"
                 value={edu.year}
-                onChange={(e) =>
-                  updateEducation(index, { year: parseInt(e.target.value) })
-                }
+                onChange={(e) => {
+                  updateEducation(index, { year: parseInt(e.target.value.replace(/^0+/, '')) || 0 });
+                }}
                 className="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Year"
+                placeholder="Year (YYYY)"
               />
             </div>
             <button
@@ -246,11 +272,18 @@ export default function ProfessionalInfo({
               <input
                 type="date"
                 value={lic.validUntil}
-                onChange={(e) =>
-                  updateLicense(index, { validUntil: e.target.value })
-                }
+                min={new Date().toISOString().split('T')[0]}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (!value || validateLicenseDate(value)) {
+                    updateLicense(index, { validUntil: value });
+                  }
+                }}
                 className="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               />
+              {lic.validUntil && !validateLicenseDate(lic.validUntil) && (
+                <p className="text-red-500 text-sm mt-1">License expiry date must be in the future</p>
+              )}
             </div>
             <button
               onClick={() => deleteLicense(index)}

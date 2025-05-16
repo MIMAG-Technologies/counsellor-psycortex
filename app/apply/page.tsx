@@ -109,47 +109,7 @@ export default function Apply() {
     };
 
     const handleSubmit = async () => {
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            // Create counsellor and get ID
-            const id = await createCounsellor(
-                formData.basicInfo?.name || '',
-                formData.basicInfo?.email || '',
-                formData.basicInfo?.phone || '',
-                Intl.DateTimeFormat().resolvedOptions().timeZone
-            );
-
-            if (id) {
-                setCounsellorId(id);
-                // Update all sections at once
-                await Promise.all([
-                    updatePersonalInfo(id, {
-                        name: formData.basicInfo?.name || '',
-                        email: formData.basicInfo?.email || '',
-                        phone: formData.basicInfo?.phone || '',
-                        dateOfBirth: formData.basicInfo?.dateOfBirth,
-                        gender: formData.basicInfo?.gender,
-                        biography: formData.basicInfo?.biography,
-                    }),
-                    updateProfessionalInfo(id, formData.professionalInfo!),
-                    updatePricing(id, formData.pricing!),
-                    updateCommunicationModes(id, JSON.stringify(formData.communicationModes)),
-                    updateSchedule(id, formData.schedule!),
-                    updateLanguages(id, formData.languages!),
-                    updateSpecialties(id, formData.specialties!)
-                ]);
-
-                setIsSubmitted(true);
-                // Redirect handled by rendering success state instead of redirect
-            }
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            setError("An error occurred while submitting your application. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
+        console.log(formData);
     };
 
     const updateFormData = (section: keyof counsellor, data: any) => {

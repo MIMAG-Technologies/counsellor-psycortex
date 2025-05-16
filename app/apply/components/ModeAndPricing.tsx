@@ -45,13 +45,29 @@ export default function ModeAndPricing({
     };
     updateCounsellor("communicationModes", newModes);
 
-    // If mode is being disabled, remove its pricing items
-    if (counsellor.communicationModes?.[mode]) {
-      const updatedPricing = counsellor.pricing?.filter(
+    // Update pricing items based on mode toggle
+    const updatedPricing = [...(counsellor.pricing || [])];
+
+    if (newModes[mode]) {
+      // Mode is being enabled - add default pricing item
+      const newPricingItem: PricingItem = {
+        sessionType: "1 Hr Session",
+        sessionTitle: `${modeDetails[mode].label} Session`,
+        price: 0,
+        currency: "INR",
+        typeOfAvailability: mode
+      };
+      updatedPricing.push(newPricingItem);
+    } else {
+      // Mode is being disabled - remove its pricing items
+      const filteredPricing = updatedPricing.filter(
         item => item.typeOfAvailability !== mode
-      ) || [];
-      updateCounsellor("pricing", updatedPricing);
+      );
+      updateCounsellor("pricing", filteredPricing);
+      return; // Return early as we've already updated the pricing
     }
+
+    updateCounsellor("pricing", updatedPricing);
   };
 
   const updatePricingItem = (index: number, updates: Partial<PricingItem>) => {
@@ -62,17 +78,6 @@ export default function ModeAndPricing({
       currency: "INR" // Always set currency to INR
     };
     updateCounsellor("pricing", updatedPricing);
-  };
-
-  const addPricingItem = (mode: keyof CommunicationModes) => {
-    const newPricingItem: PricingItem = {
-      sessionType: "1 Hr Session",
-      sessionTitle: `${modeDetails[mode].label} Session`,
-      price: 0,
-      currency: "INR",
-      typeOfAvailability: mode
-    };
-    updateCounsellor("pricing", [...(counsellor.pricing || []), newPricingItem]);
   };
 
   return (
@@ -135,7 +140,8 @@ export default function ModeAndPricing({
                     Price (INR)
                   </label>
                   <input
-                    type="text"
+                    type="number"
+                    min="0"
                     value={priceItem.price || 0}
                     onChange={(e) => {
                       const value = e.target.value.replace(/[^0-9.]/g, "");
@@ -196,20 +202,6 @@ export default function ModeAndPricing({
           ))}
         </ul>
       )}
-
-      {/* Add Pricing Button */}
-      {Object.entries(modeDetails).map(([mode, { label }]) => (
-        counsellor.communicationModes?.[mode as keyof CommunicationModes] &&
-        !counsellor.pricing?.some(item => item.typeOfAvailability === mode) && (
-          <button
-            key={mode}
-            onClick={() => addPricingItem(mode as keyof CommunicationModes)}
-            className="mt-4 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200"
-          >
-            Add {label} Pricing
-          </button>
-        )
-      ))}
     </div>
   );
 }

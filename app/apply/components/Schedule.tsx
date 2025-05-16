@@ -15,6 +15,12 @@ const DAYS_OF_WEEK: DayOfWeek[] = [
   "Sunday",
 ];
 
+// Generate time slots from 00:00 to 23:00 in 1-hour intervals
+const TIME_SLOTS = Array.from({ length: 24 }, (_, i) => {
+  const hour = i.toString().padStart(2, '0');
+  return `${hour}:00`;
+});
+
 export default function Schedule({
   counsellor,
   updateCounsellor,
@@ -105,12 +111,18 @@ export default function Schedule({
                   <label className="block text-sm font-medium text-gray-600">
                     Start Time
                   </label>
-                  <input
-                    type="time"
+                  <select
                     value={item.startTime || ""}
                     onChange={(e) => handleTimeChange(item.day, 'startTime', e.target.value)}
                     className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
-                  />
+                  >
+                    <option value="">Select time</option>
+                    {TIME_SLOTS.map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* End Time */}
@@ -118,12 +130,18 @@ export default function Schedule({
                   <label className="block text-sm font-medium text-gray-600">
                     End Time
                   </label>
-                  <input
-                    type="time"
+                  <select
                     value={item.endTime || ""}
                     onChange={(e) => handleTimeChange(item.day, 'endTime', e.target.value)}
                     className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
-                  />
+                  >
+                    <option value="">Select time</option>
+                    {TIME_SLOTS.map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             )}
