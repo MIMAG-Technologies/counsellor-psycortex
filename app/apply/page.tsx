@@ -8,7 +8,8 @@ import ProfessionalInfo from './components/ProfessionalInfo';
 import ModeAndPricing from './components/ModeAndPricing';
 import Schedule from './components/Schedule';
 import SpecialitiesAndLanguages from './components/SpecialitiesAndLanguages';
-import { createCounsellor, updatePersonalInfo, updateProfessionalInfo, updatePricing, updateSchedule, updateLanguages, updateSpecialties, updateCommunicationModes } from './utils/counsellorUtils';
+import { toast } from 'react-toastify';
+import { submitApplication } from './utils/counsellorUtils';
 
 export default function Apply() {
     // const searchParams = useSearchParams(); ignore this for now
@@ -96,9 +97,127 @@ export default function Apply() {
         validateToken();
     }, [token]);
 
+    const validateSection1 = () => {
+        const { basicInfo } = formData;
+        if (!basicInfo) return false;
+
+        return !!(
+            basicInfo.name &&
+            basicInfo.dateOfBirth &&
+            basicInfo.gender &&
+            basicInfo.biography &&
+            basicInfo.email &&
+            basicInfo.phone
+        );
+    };
+
+    const validateSection2 = () => {
+        const { professionalInfo } = formData;
+        if (!professionalInfo) return false;
+
+        // Check title and years of experience
+        if (!professionalInfo.title || !professionalInfo.yearsOfExperience) return false;
+
+        // Check if at least one education entry exists and is complete
+        if (!professionalInfo.education || professionalInfo.education.length === 0) return false;
+
+        // Verify all education entries are complete
+        const isEducationComplete = professionalInfo.education.every(edu =>
+            edu.degree && edu.field && edu.institution && edu.year
+        );
+        if (!isEducationComplete) return false;
+
+        // Verify all license entries (if any) are complete
+        if (professionalInfo.licenses && professionalInfo.licenses.length > 0) {
+            const isLicensesComplete = professionalInfo.licenses.every(license =>
+                license.type && license.licenseNumber && license.issuingAuthority && license.validUntil
+            );
+            if (!isLicensesComplete) return false;
+        }
+
+        return true;
+    };
+
+    const validateSection3 = () => {
+        const { communicationModes, pricing } = formData;
+        if (!communicationModes || !pricing) return false;
+
+        // Check if at least one mode is selected
+        const hasOneMode = Object.values(communicationModes).some(mode => mode === true);
+        if (!hasOneMode) return false;
+
+        // Check if pricing exists for all selected modes
+        const selectedModes = Object.entries(communicationModes)
+            .filter(([_, isSelected]) => isSelected)
+            .map(([mode]) => mode);
+
+        const hasPricingForAllModes = selectedModes.every(mode =>
+            pricing.some(item => item.typeOfAvailability === mode && item.sessionTitle && item.price >= 0)
+        );
+
+        return hasPricingForAllModes;
+    };
+
+    const validateSection4 = () => {
+        const { schedule } = formData;
+        if (!schedule || schedule.length === 0) return false;
+
+        // Count working days
+        const workingDays = schedule.filter(day => day.isWorkingDay).length;
+        if (workingDays < 3) return false;
+
+        // Check if all working days have start and end times
+        const isScheduleComplete = schedule.every(day =>
+            !day.isWorkingDay || (day.startTime && day.endTime)
+        );
+
+        return isScheduleComplete;
+    };
+
+    const validateSection5 = () => {
+        const { specialties, languages } = formData;
+        if (!specialties || !languages) return false;
+
+        return specialties.length > 0 && languages.length > 0;
+    };
+
     const handleNext = () => {
+        let isValid = false;
+        let errorMessage = '';
+
+        switch (currentStep) {
+            case 1:
+                isValid = validateSection1();
+                errorMessage = 'Please fill in all required personal information fields.';
+                break;
+            case 2:
+                isValid = validateSection2();
+                errorMessage = 'Please complete all professional information. Title, years of experience, and at least one complete education entry are required.';
+                break;
+            case 3:
+                isValid = validateSection3();
+                errorMessage = 'Please select at least one communication mode and complete its pricing details.';
+                break;
+            case 4:
+                isValid = validateSection4();
+                errorMessage = 'Please set up at least 3 working days with complete schedules.';
+                break;
+            case 5:
+                isValid = validateSection5();
+                errorMessage = 'Please select at least one specialty and one language.';
+                break;
+            default:
+                isValid = true;
+        }
+
+        if (!isValid) {
+            toast.error(errorMessage);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+
+        setError(null);
         setCurrentStep(prev => prev + 1);
-        // Scroll to top when changing steps
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -109,7 +228,28 @@ export default function Apply() {
     };
 
     const handleSubmit = async () => {
-        console.log(formData);
+        // Validate the final section first
+        if (!validateSection5()) {
+            toast.error('Please complete all required fields before submitting.');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const result = await submitApplication(token, formData);
+
+            if (result.success) {
+                setIsSubmitted(true);
+                toast.success('Application submitted successfully!');
+            } else {
+                toast.error(result.error || 'Failed to submit application. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting application:', error);
+            toast.error('An unexpected error occurred. Please try again later.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const updateFormData = (section: keyof counsellor, data: any) => {

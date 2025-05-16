@@ -1,5 +1,6 @@
 import {
   Branches,
+  counsellor,
   Education,
   Filters,
   Language,
@@ -267,5 +268,135 @@ export const getBranches = async () => {
     return response.data.data.branches || ([] as Branches);
   } catch (err) {
     return [];
+  }
+};
+
+export const submitApplication = async (
+  counsellorId: string | null,
+  counsellor: Partial<counsellor>
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    // If no counsellorId, create new counsellor
+    if (!counsellorId) {
+      counsellorId = await createCounsellor(
+        counsellor.basicInfo?.name || "",
+        counsellor.basicInfo?.email || "",
+        counsellor.basicInfo?.phone || "",
+        Intl.DateTimeFormat().resolvedOptions().timeZone // Get user's timezone
+      );
+
+      if (!counsellorId) {
+        throw new Error("Failed to create counsellor");
+      }
+    }
+
+    // 1. Update Personal Information
+    const personalInfoResult = await updatePersonalInfo(counsellorId, {
+      name: counsellor.basicInfo?.name || "",
+      dateOfBirth: counsellor.basicInfo?.dateOfBirth || "",
+      gender: counsellor.basicInfo?.gender || "",
+      biography: counsellor.basicInfo?.biography || "",
+      email: counsellor.basicInfo?.email || "",
+      phone: counsellor.basicInfo?.phone || "",
+      profileImage: counsellor.basicInfo?.profileImage || "",
+    });
+
+    if (!personalInfoResult) {
+      throw new Error("Failed to update personal information");
+    }
+
+    // 2. Update Professional Information
+    const professionalInfoResult = await updateProfessionalInfo(counsellorId, {
+      title: counsellor.professionalInfo?.title || "",
+      yearsOfExperience: counsellor.professionalInfo?.yearsOfExperience || 0,
+      education: counsellor.professionalInfo?.education || [],
+      licenses: counsellor.professionalInfo?.licenses || [],
+    });
+
+    if (!professionalInfoResult) {
+      throw new Error("Failed to update professional information");
+    }
+
+    // 3. Update Communication Modes
+    const communicationModesString = Object.entries(
+      counsellor.communicationModes || {}
+    )
+      .filter(([_, isEnabled]) => isEnabled)
+      .map(([mode]) => mode)
+      .join(",");
+
+    const communicationModesResult = await updateCommunicationModes(
+      counsellorId,
+      communicationModesString
+    );
+
+    if (!communicationModesResult) {
+      throw new Error("Failed to update communication modes");
+    }
+
+    // 4. Update Pricing
+    const pricingResult = await updatePricing(
+      counsellorId,
+      counsellor.pricing || []
+    );
+
+    if (!pricingResult) {
+      throw new Error("Failed to update pricing information");
+    }
+
+    // 5. Update Schedule
+    const scheduleResult = await updateSchedule(
+      counsellorId,
+      counsellor.schedule || []
+    );
+
+    if (!scheduleResult) {
+      throw new Error("Failed to update schedule");
+    }
+
+    // 6. Update Languages
+    const languagesResult = await updateLanguages(
+      counsellorId,
+      counsellor.languages || []
+    );
+
+    if (!languagesResult) {
+      throw new Error("Failed to update languages");
+    }
+
+    // 7. Update Specialties
+    const specialtiesResult = await updateSpecialties(
+      counsellorId,
+      counsellor.specialties || []
+    );
+
+    if (!specialtiesResult) {
+      throw new Error("Failed to update specialties");
+    }
+
+    // 8. If there's a profile image as base64, update it
+    if (
+      counsellor.basicInfo?.profileImage &&
+      counsellor.basicInfo.profileImage.startsWith("data:image")
+    ) {
+      // Convert base64 to File object
+      const base64Response = await fetch(counsellor.basicInfo.profileImage);
+      const blob = await base64Response.blob();
+      const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+
+      const profileImageResult = await updateProfilePic(counsellorId, file);
+      if (!profileImageResult) {
+        throw new Error("Failed to update profile image");
+      }
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error submitting application:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to submit application",
+    };
   }
 };
