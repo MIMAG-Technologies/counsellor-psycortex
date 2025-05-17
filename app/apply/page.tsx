@@ -10,10 +10,12 @@ import Schedule from './components/Schedule';
 import SpecialitiesAndLanguages from './components/SpecialitiesAndLanguages';
 import { toast } from 'react-toastify';
 import { submitApplication } from './utils/counsellorUtils';
+import { useSearchParams } from 'next/navigation';
+import { counsellordata } from './utils/counsellorStateManager';
 
 export default function Apply() {
-    // const searchParams = useSearchParams(); ignore this for now
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGV4YW1wbGUuY29tIiwicGhvbmUiOiIrMTIzNDU2Nzg5MCIsInN0YXR1cyI6InJldmVyaWZ5IiwiY291bnNlbGxvcklkIjoiYzEyMyIsInJlbWFyayI6Ik1pc3NpbmcgcGhvbmUgbnVtYmVyIn0=.+aFFtVJ6pGoxL3yBIPLBNix92xWSKpLi8aQTrpaQlow=";
+    const searchParams = useSearchParams();
+    const token = searchParams.get('token');
     const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +62,14 @@ export default function Apply() {
         specialties: [],
     });
 
+    const [payLoad, setpayLoad] = useState<{
+        email: string;
+        phone: string;
+        status: string;
+        counsellorId: string | null;
+        remark: string | null;
+    } | null>(null)
+
     useEffect(() => {
         const validateToken = async () => {
             if (!token) {
@@ -76,14 +86,7 @@ export default function Apply() {
 
                 if (res.data) {
                     setIsTokenValid(true);
-                    setFormData(prev => ({
-                        ...prev,
-                        basicInfo: {
-                            ...prev.basicInfo!,
-                            email: res.data.email || '',
-                            phone: res.data.phone || '',
-                        }
-                    }));
+                    setpayLoad(res.data)
                 } else {
                     setIsTokenValid(false);
                 }
@@ -97,6 +100,17 @@ export default function Apply() {
         validateToken();
     }, [token]);
 
+    useEffect(() => {
+        const fetchCounsellorData = async () => {
+            if (payLoad) {
+                const counsellorData = await counsellordata(payLoad)
+                if (counsellorData) {
+                    setFormData(counsellorData)
+                }
+            }
+        }
+        fetchCounsellorData()
+    }, [payLoad]);
     const validateSection1 = () => {
         const { basicInfo } = formData;
         if (!basicInfo) return false;
