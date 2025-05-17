@@ -9,9 +9,8 @@ import ModeAndPricing from './components/ModeAndPricing';
 import Schedule from './components/Schedule';
 import SpecialitiesAndLanguages from './components/SpecialitiesAndLanguages';
 import { toast } from 'react-toastify';
-import { submitApplication } from './utils/counsellorUtils';
 import { useSearchParams } from 'next/navigation';
-import { counsellordata } from './utils/counsellorStateManager';
+import { counsellordata, submitApplication } from './utils/counsellorStateManager';
 
 export default function Apply() {
     const searchParams = useSearchParams();
@@ -250,13 +249,15 @@ export default function Apply() {
 
         setIsLoading(true);
         try {
-            const result = await submitApplication(token, formData);
+            if (payLoad) {
+                const result = await submitApplication(payLoad, formData as counsellor);
 
-            if (result.success) {
-                setIsSubmitted(true);
-                toast.success('Application submitted successfully!');
-            } else {
-                toast.error(result.error || 'Failed to submit application. Please try again.');
+                if (result.success) {
+                    setIsSubmitted(true);
+                    toast.success('Application submitted successfully!');
+                } else {
+                    toast.error(result.error || 'Failed to submit application. Please try again.');
+                }
             }
         } catch (error) {
             console.error('Error submitting application:', error);

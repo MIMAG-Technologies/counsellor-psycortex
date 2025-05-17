@@ -1,5 +1,16 @@
 import { counsellor } from "./counsellorTypes";
 import { getCounsellor } from "./counsellorUtils";
+import {
+  createCounsellor,
+  updatePersonalInfo,
+  updateProfessionalInfo,
+  updatePricing,
+  updateCommunicationModes,
+  updateSchedule,
+  updateLanguages,
+  updateSpecialties,
+  updateProfilePic,
+} from "./counsellorUtils";
 
 export const counsellordata = async (payload: {
   email: string;
@@ -133,4 +144,144 @@ export const counsellordata = async (payload: {
   }
 
   return null;
+};
+
+export const submitApplication = async (
+  payload: {
+    email: string;
+    phone: string;
+    status: string;
+    counsellorId: string | null;
+    remark: string | null;
+  },
+  counsellor: counsellor
+) => {
+  try {
+    let counsellorId = payload.counsellorId;
+
+    // Step 1: If new counsellor, create one first
+    if (payload.status === "new") {
+      counsellorId = await createCounsellor(
+        counsellor.basicInfo.name,
+        counsellor.basicInfo.email,
+        counsellor.basicInfo.phone,
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      );
+
+      if (!counsellorId) {
+        throw new Error("Failed to create counsellor");
+      }
+    }
+
+    if (!counsellorId) {
+      throw new Error("Counsellor ID is required");
+    }
+
+    // Step 2: Update Personal Information
+    const personalInfoResult = await updatePersonalInfo(counsellorId, {
+      name: counsellor.basicInfo.name,
+      dateOfBirth: counsellor.basicInfo.dateOfBirth,
+      gender: counsellor.basicInfo.gender,
+      biography: counsellor.basicInfo.biography,
+      email: counsellor.basicInfo.email,
+      phone: counsellor.basicInfo.phone,
+      profileImage: counsellor.basicInfo.profileImage,
+    });
+
+    if (!personalInfoResult) {
+      throw new Error("Failed to update personal information");
+    }
+
+    // Step 3: Update Professional Information
+    const professionalInfoResult = await updateProfessionalInfo(counsellorId, {
+      title: counsellor.professionalInfo.title,
+      yearsOfExperience: counsellor.professionalInfo.yearsOfExperience,
+      education: counsellor.professionalInfo.education,
+      licenses: counsellor.professionalInfo.licenses,
+    });
+
+    if (!professionalInfoResult) {
+      throw new Error("Failed to update professional information");
+    }
+
+    // Step 4: Update Communication Modes
+    const communicationModesString = Object.entries(
+      counsellor.communicationModes
+    )
+      .filter(([_, isEnabled]) => isEnabled)
+      .map(([mode]) => mode)
+      .join(",");
+
+    const communicationModesResult = await updateCommunicationModes(
+      counsellorId,
+      communicationModesString
+    );
+
+    if (!communicationModesResult) {
+      throw new Error("Failed to update communication modes");
+    }
+
+    // Step 5: Update Pricing
+    const pricingResult = await updatePricing(counsellorId, counsellor.pricing);
+
+    if (!pricingResult) {
+      throw new Error("Failed to update pricing information");
+    }
+
+    // Step 6: Update Schedule
+    const scheduleResult = await updateSchedule(
+      counsellorId,
+      counsellor.schedule
+    );
+
+    if (!scheduleResult) {
+      throw new Error("Failed to update schedule");
+    }
+
+    // Step 7: Update Languages
+    const languagesResult = await updateLanguages(
+      counsellorId,
+      counsellor.languages
+    );
+
+    if (!languagesResult) {
+      throw new Error("Failed to update languages");
+    }
+
+    // Step 8: Update Specialties
+    const specialtiesResult = await updateSpecialties(
+      counsellorId,
+      counsellor.specialties
+    );
+
+    if (!specialtiesResult) {
+      throw new Error("Failed to update specialties");
+    }
+
+    // Step 9: If there's a profile image as base64, update it
+    if (
+      counsellor.basicInfo.profileImage &&
+      counsellor.basicInfo.profileImage.startsWith("data:image")
+    ) {
+      // Convert base64 to File object
+      const base64Response = await fetch(counsellor.basicInfo.profileImage);
+      const blob = await base64Response.blob();
+      const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+
+      const profileImageResult = await updateProfilePic(counsellorId, file);
+      if (!profileImageResult) {
+        throw new Error("Failed to update profile image");
+      }
+    }
+
+    return { success: true, counsellorId };
+  } catch (error) {
+    console.error("Error in handleSubmit:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to submit application",
+      counsellorId: null,
+    };
+  }
 };
