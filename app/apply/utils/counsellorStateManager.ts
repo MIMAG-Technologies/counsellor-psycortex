@@ -10,6 +10,7 @@ import {
   updateLanguages,
   updateSpecialties,
   updateProfilePic,
+  UpdateBranches,
 } from "./counsellorUtils";
 
 export const counsellordata = async (payload: {
@@ -204,7 +205,28 @@ export const submitApplication = async (
       throw new Error("Failed to update professional information");
     }
 
-    // Step 4: Update Communication Modes
+    // Step 4: Update Branches (Primary and Preferred Center Addresses)
+    const branchesResult = await UpdateBranches(
+      counsellorId,
+      {
+        street_address: counsellor.primaryAddress.street_address,
+        city: counsellor.primaryAddress.city,
+        state: counsellor.primaryAddress.state,
+        pincode: counsellor.primaryAddress.pincode,
+      },
+      {
+        street_address: counsellor.preferredCenterAddress.street_address,
+        city: counsellor.preferredCenterAddress.city,
+        state: counsellor.preferredCenterAddress.state,
+        pincode: counsellor.preferredCenterAddress.pincode,
+      }
+    );
+
+    if (!branchesResult) {
+      throw new Error("Failed to update branch information");
+    }
+
+    // Step 5: Update Communication Modes
     const communicationModesString = Object.entries(
       counsellor.communicationModes
     )
@@ -221,14 +243,14 @@ export const submitApplication = async (
       throw new Error("Failed to update communication modes");
     }
 
-    // Step 5: Update Pricing
+    // Step 6: Update Pricing
     const pricingResult = await updatePricing(counsellorId, counsellor.pricing);
 
     if (!pricingResult) {
       throw new Error("Failed to update pricing information");
     }
 
-    // Step 6: Update Schedule
+    // Step 7: Update Schedule
     const scheduleResult = await updateSchedule(
       counsellorId,
       counsellor.schedule
@@ -238,7 +260,7 @@ export const submitApplication = async (
       throw new Error("Failed to update schedule");
     }
 
-    // Step 7: Update Languages
+    // Step 8: Update Languages
     const languagesResult = await updateLanguages(
       counsellorId,
       counsellor.languages
@@ -248,7 +270,7 @@ export const submitApplication = async (
       throw new Error("Failed to update languages");
     }
 
-    // Step 8: Update Specialties
+    // Step 9: Update Specialties
     const specialtiesResult = await updateSpecialties(
       counsellorId,
       counsellor.specialties
@@ -258,7 +280,7 @@ export const submitApplication = async (
       throw new Error("Failed to update specialties");
     }
 
-    // Step 9: If there's a profile image as base64, update it
+    // Step 10: If there's a profile image as base64, update it
     if (
       counsellor.basicInfo.profileImage &&
       counsellor.basicInfo.profileImage.startsWith("data:image")

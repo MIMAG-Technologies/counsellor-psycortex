@@ -1,5 +1,6 @@
 import {
   Branches,
+  BranchType,
   counsellor,
   Education,
   Filters,
@@ -239,6 +240,24 @@ export const updateProfilePic = async (
   }
 };
 
+export async function UpdateBranches(
+  counsellorId: string,
+  primaryAddress: BranchType,
+  preferredCenterAddress: BranchType
+): Promise<boolean> {
+  try {
+    await axios.post(`${base_url}/counsellor/update_location.php`, {
+      counsellorId,
+      primaryAddress,
+      preferredCenterAddress,
+    });
+    return true;
+  } catch (error) {
+    console.error("Error updating branches:", error);
+    return false;
+  }
+}
+
 export const getCounsellor = async (counsellorId: string) => {
   try {
     const response = await axios.post(
@@ -268,5 +287,20 @@ export const getBranches = async () => {
     return response.data.data.branches || ([] as Branches);
   } catch (err) {
     return [];
+  }
+};
+
+export const markLinkAsUsed = async (token: string) => {
+  try {
+    await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/send/complete_link.php`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error marking link as used:", error);
   }
 };

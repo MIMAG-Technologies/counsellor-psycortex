@@ -126,3 +126,10 @@ export type Branches = {
   pincode: string;
   is_active: boolean;
 }[];
+
+export type BranchType = {
+  street_address: string;
+  city: string;
+  state: string;
+  pincode: string;
+};
