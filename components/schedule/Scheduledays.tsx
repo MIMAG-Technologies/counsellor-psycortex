@@ -145,8 +145,16 @@ const CounselorSchedule: React.FC = () => {
       );
     }
 
-    const { working_hours, slots } = dayData;
-    const timeSlots = generateTimeSlots(working_hours.start, working_hours.end);
+    const { working_hours } = dayData;
+    let startTime = working_hours.start;
+
+    // Check if the selected date is today
+    if (isToday(selectedDate)) {
+      const currentHour = new Date().getHours();
+      startTime = `${(currentHour + 1).toString().padStart(2, '0')}:00:00`;
+    }
+
+    const timeSlots = generateTimeSlots(startTime, working_hours.end);
 
     return (
       <div className="bg-white rounded-xl p-6 md:p-8 min-h-64">
@@ -169,13 +177,12 @@ const CounselorSchedule: React.FC = () => {
           {timeSlots.map(slot => {
             const available = isSlotAvailable(slot, dayData.slots);
             return (
-                <div
+              <div
                 key={slot}
-                className={`rounded-lg p-4 border transition-all ${
-                  available ? 'border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100' : 'border-gray-200 bg-gray-100'
-                }`}
+                className={`rounded-lg p-4 border transition-all ${available ? 'border-gray-200 bg-gray-50 cursor-pointer hover:bg-gray-100' : 'border-gray-200 bg-gray-100'
+                  }`}
                 onClick={() => available && handleSlotClick(dayData.date, slot)}
-                >
+              >
                 <div className="text-base md:text-lg font-medium text-center text-gray-800 mb-2">
                   {formatTime(slot)}
                 </div>
@@ -183,7 +190,7 @@ const CounselorSchedule: React.FC = () => {
                   ${available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {available ? 'Available' : 'Booked'}
                 </div>
-                </div>
+              </div>
             );
           })}
         </div>
@@ -261,16 +268,16 @@ const CounselorSchedule: React.FC = () => {
   return (
     <div className="w-full rounded-xl p-5 md:p-8">
       {renderCalendarDays()}
-      
+
       {/* Leave Management Section */}
       <div className="mb-8">
         <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-             onClick={() => setShowMultiDayLeave(true)}>
+          onClick={() => setShowMultiDayLeave(true)}>
           <div className="flex items-center gap-6">
             <div className="bg-indigo-100 p-4 rounded-xl">
               <svg className="w-6 h-6 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
             </div>
@@ -286,7 +293,7 @@ const CounselorSchedule: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       {renderSelectedDaySchedule()}
       {showIndividualLeave && selectedSlot && (
         <IndividualLeaveForm
