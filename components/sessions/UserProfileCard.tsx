@@ -29,11 +29,11 @@ export function UserProfileCard({ userDetails }: UserProfileCardProps) {
             <div className="mt-1 flex items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-1.5">
                 <FaEnvelope className="w-4 h-4" />
-                {userDetails.personalInfo.email}
+                {`${userDetails.personalInfo.email.slice(0, 2)}${'X'.repeat(userDetails.personalInfo.email.indexOf('@') - 2)}${userDetails.personalInfo.email.slice(userDetails.personalInfo.email.indexOf('@'))}`}
               </div>
               <div className="flex items-center gap-1.5">
                 <FaPhone className="w-4 h-4" />
-                {userDetails.personalInfo.phone}
+                {`${userDetails.personalInfo.phone.slice(0, 4)}${'X'.repeat(userDetails.personalInfo.phone.length - 6)}${userDetails.personalInfo.phone.slice(-2)}`}
               </div>
             </div>
           </div>
