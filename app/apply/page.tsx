@@ -355,16 +355,16 @@ export default function Apply() {
         if (!showConfirmModal) return null;
 
         return (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 md:p-8">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6">Confirm Application Submission</h2>
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6 md:p-8">
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Confirm Application Submission</h2>
 
-                    <div className="text-gray-600 mb-6">
+                    <div className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                         Please review and confirm the following before submitting your application:
                     </div>
 
-                    <div className="space-y-1 mb-8">
-                        <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50">
+                    <div className="space-y-2 sm:space-y-1 mb-6 sm:mb-8">
+                        <label className="flex items-start space-x-2 sm:space-x-3 cursor-pointer p-2 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100">
                             <input
                                 type="checkbox"
                                 checked={confirmations.personalInfo}
@@ -372,14 +372,14 @@ export default function Apply() {
                                     ...prev,
                                     personalInfo: e.target.checked
                                 }))}
-                                className="mt-1 h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary"
+                                className="mt-0.5 sm:mt-1 h-4 w-4 sm:h-5 sm:w-5 text-primary rounded border-gray-300 focus:ring-primary flex-shrink-0"
                             />
-                            <span className="text-gray-700">
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
                                 I confirm that all my personal information is accurate and complete, including my name, contact details, and biographical information.
                             </span>
                         </label>
 
-                        <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50">
+                        <label className="flex items-start space-x-2 sm:space-x-3 cursor-pointer p-2 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100">
                             <input
                                 type="checkbox"
                                 checked={confirmations.professionalInfo}
@@ -387,14 +387,14 @@ export default function Apply() {
                                     ...prev,
                                     professionalInfo: e.target.checked
                                 }))}
-                                className="mt-1 h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary"
+                                className="mt-0.5 sm:mt-1 h-4 w-4 sm:h-5 sm:w-5 text-primary rounded border-gray-300 focus:ring-primary flex-shrink-0"
                             />
-                            <span className="text-gray-700">
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
                                 I verify that my professional qualifications, education history, and licenses provided are valid and current.
                             </span>
                         </label>
 
-                        <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50">
+                        <label className="flex items-start space-x-2 sm:space-x-3 cursor-pointer p-2 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100">
                             <input
                                 type="checkbox"
                                 checked={confirmations.communicationAndPricing}
@@ -402,14 +402,14 @@ export default function Apply() {
                                     ...prev,
                                     communicationAndPricing: e.target.checked
                                 }))}
-                                className="mt-1 h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary"
+                                className="mt-0.5 sm:mt-1 h-4 w-4 sm:h-5 sm:w-5 text-primary rounded border-gray-300 focus:ring-primary flex-shrink-0"
                             />
-                            <span className="text-gray-700">
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
                                 I confirm that my communication preferences and pricing details are correctly set and I agree to provide services at the stated rates.
                             </span>
                         </label>
 
-                        <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50">
+                        <label className="flex items-start space-x-2 sm:space-x-3 cursor-pointer p-2 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100">
                             <input
                                 type="checkbox"
                                 checked={confirmations.schedule}
@@ -417,14 +417,14 @@ export default function Apply() {
                                     ...prev,
                                     schedule: e.target.checked
                                 }))}
-                                className="mt-1 h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary"
+                                className="mt-0.5 sm:mt-1 h-4 w-4 sm:h-5 sm:w-5 text-primary rounded border-gray-300 focus:ring-primary flex-shrink-0"
                             />
-                            <span className="text-gray-700">
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
                                 I commit to maintaining the availability schedule I have provided and will update it promptly if changes are needed.
                             </span>
                         </label>
 
-                        <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50">
+                        <label className="flex items-start space-x-2 sm:space-x-3 cursor-pointer p-2 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100">
                             <input
                                 type="checkbox"
                                 checked={confirmations.specialtiesAndLanguages}
@@ -432,25 +432,25 @@ export default function Apply() {
                                     ...prev,
                                     specialtiesAndLanguages: e.target.checked
                                 }))}
-                                className="mt-1 h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary"
+                                className="mt-0.5 sm:mt-1 h-4 w-4 sm:h-5 sm:w-5 text-primary rounded border-gray-300 focus:ring-primary flex-shrink-0"
                             />
-                            <span className="text-gray-700">
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">
                                 I confirm that I have the expertise in my selected specialties and am fluent in all listed languages at the indicated proficiency levels.
                             </span>
                         </label>
                     </div>
 
-                    <div className="flex justify-end space-x-4 border-t pt-6">
+                    <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 border-t pt-4 sm:pt-6">
                         <button
                             onClick={() => setShowConfirmModal(false)}
-                            className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                            className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm sm:text-base order-2 sm:order-1"
                             disabled={isLoading}
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleFinalSubmit}
-                            className={`px-6 py-2 rounded-lg font-medium flex items-center transition-colors ${isLoading
+                            className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-2 rounded-lg font-medium flex items-center justify-center transition-colors text-sm sm:text-base order-1 sm:order-2 ${isLoading
                                 ? 'opacity-50 cursor-not-allowed bg-primary text-white'
                                 : Object.values(confirmations).every(value => value)
                                     ? 'bg-primary text-white hover:bg-secondary'
@@ -460,7 +460,7 @@ export default function Apply() {
                         >
                             {isLoading ? (
                                 <span className="flex items-center">
-                                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                     </svg>

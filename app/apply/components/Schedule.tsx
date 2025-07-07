@@ -76,14 +76,14 @@ export default function Schedule({
   };
 
   return (
-    <div className="mx-auto p-6 bg-white rounded-lg">
+    <div className="mx-auto p-4 sm:p-6 bg-white rounded-lg">
       {/* Schedule List */}
-      <div className="space-y-4 mt-4">
+      <div className="space-y-3 sm:space-y-4 mt-4">
         {counsellor.schedule?.map((item) => (
-          <div key={item.day} className="bg-gray-100 p-4 rounded-lg shadow-sm">
+          <div key={item.day} className="bg-gray-100 p-3 sm:p-4 rounded-lg shadow-sm">
             {/* Day Name */}
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-700">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-700">
                 {item.day}
               </h3>
               <label className="flex items-center space-x-2">
@@ -97,7 +97,7 @@ export default function Schedule({
                       ...(e.target.checked ? {} : { startTime: null, endTime: null })
                     })
                   }
-                  className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                 />
                 <span className="text-sm text-gray-600">Working Day</span>
               </label>
@@ -105,16 +105,16 @@ export default function Schedule({
 
             {/* Start & End Time Inputs */}
             {item.isWorkingDay && (
-              <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Start Time */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-600">
+                  <label className="block text-sm font-medium text-gray-600 mb-1">
                     Start Time
                   </label>
                   <select
                     value={item.startTime || ""}
                     onChange={(e) => handleTimeChange(item.day, 'startTime', e.target.value)}
-                    className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+                    className="block w-full px-3 py-2 text-sm sm:text-base border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
                   >
                     <option value="">Select time</option>
                     {TIME_SLOTS.map((time) => (
@@ -127,13 +127,13 @@ export default function Schedule({
 
                 {/* End Time */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-600">
+                  <label className="block text-sm font-medium text-gray-600 mb-1">
                     End Time
                   </label>
                   <select
                     value={item.endTime || ""}
                     onChange={(e) => handleTimeChange(item.day, 'endTime', e.target.value)}
-                    className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+                    className="block w-full px-3 py-2 text-sm sm:text-base border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
                   >
                     <option value="">Select time</option>
                     {TIME_SLOTS.map((time) => (

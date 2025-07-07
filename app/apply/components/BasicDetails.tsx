@@ -39,12 +39,12 @@ export default function BasicDetails({
   };
 
   return (
-    <div className="mx-auto p-6 bg-white rounded-lg">
+    <div className="mx-auto p-4 sm:p-6 bg-white rounded-lg">
       {/* Form Fields */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Name
           </label>
           <input
@@ -54,14 +54,14 @@ export default function BasicDetails({
               ...counsellor.basicInfo,
               name: e.target.value
             })}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+            className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
             placeholder="Enter name"
           />
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Email
           </label>
           <input
@@ -69,13 +69,13 @@ export default function BasicDetails({
             value={counsellor.basicInfo?.email || ''}
             readOnly
             disabled
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed"
+            className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed"
           />
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Phone
           </label>
           <input
@@ -83,13 +83,13 @@ export default function BasicDetails({
             value={counsellor.basicInfo?.phone || ''}
             readOnly
             disabled
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed"
+            className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed"
           />
         </div>
 
         {/* Date of Birth */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Date of Birth
           </label>
           <input
@@ -100,13 +100,13 @@ export default function BasicDetails({
               dateOfBirth: e.target.value
             })}
             max={new Date().toISOString().split('T')[0]}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+            className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
           />
         </div>
 
         {/* Gender */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Gender
           </label>
           <select
@@ -115,7 +115,7 @@ export default function BasicDetails({
               ...counsellor.basicInfo,
               gender: e.target.value
             })}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+            className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
           >
             <option value="" disabled>
               Select gender
@@ -129,11 +129,12 @@ export default function BasicDetails({
             })}
           </select>
         </div>
+
+        {/* Profile Image */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Profile Image
           </label>
-
           <input
             accept="image/*"
             onChange={handleFileChange}
@@ -144,7 +145,7 @@ export default function BasicDetails({
 
         {/* Biography */}
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Biography
           </label>
           <div className="relative">
@@ -161,11 +162,11 @@ export default function BasicDetails({
                 }
               }}
               maxLength={400}
-              className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
+              className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-primary focus:border-primary"
               placeholder="Write a short biography (max 400 characters)"
               rows={3}
             />
-            <div className="absolute bottom-2 right-2 text-sm text-gray-500">
+            <div className="absolute bottom-2 right-2 text-xs sm:text-sm text-gray-500">
               {(counsellor.basicInfo?.biography?.length || 0)}/400
             </div>
           </div>
@@ -173,11 +174,11 @@ export default function BasicDetails({
       </div>
 
       {/* Primary Address */}
-      <div className="mt-4">
-        <h3 className="text-lg font-semibold text-gray-700">Primary Address</h3>
-        <div className="grid grid-cols-2 gap-3 mt-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-600">
+      <div className="mt-6">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-700 mb-3">Primary Address</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Street Address
             </label>
             <input
@@ -187,11 +188,12 @@ export default function BasicDetails({
                 ...counsellor.primaryAddress,
                 street_address: e.target.value
               })}
-              className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              className="block w-full px-3 py-2 text-sm sm:text-base border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              placeholder="Enter street address"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               City
             </label>
             <input
@@ -201,11 +203,12 @@ export default function BasicDetails({
                 ...counsellor.primaryAddress,
                 city: e.target.value
               })}
-              className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              className="block w-full px-3 py-2 text-sm sm:text-base border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              placeholder="Enter city"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               State
             </label>
             <input
@@ -215,11 +218,12 @@ export default function BasicDetails({
                 ...counsellor.primaryAddress,
                 state: e.target.value
               })}
-              className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              className="block w-full px-3 py-2 text-sm sm:text-base border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              placeholder="Enter state"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Pincode
             </label>
             <input
@@ -229,7 +233,8 @@ export default function BasicDetails({
                 ...counsellor.primaryAddress,
                 pincode: e.target.value
               })}
-              className="block w-full px-3 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              className="block w-full px-3 py-2 text-sm sm:text-base border rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+              placeholder="Enter pincode"
             />
           </div>
         </div>

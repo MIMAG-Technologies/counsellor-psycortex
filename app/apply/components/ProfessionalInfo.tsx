@@ -83,11 +83,11 @@ export default function ProfessionalInfo({
   };
 
   return (
-    <div className="mx-auto p-6 bg-white rounded-lg">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="mx-auto p-4 sm:p-6 bg-white rounded-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Title
           </label>
           <input
@@ -97,14 +97,14 @@ export default function ProfessionalInfo({
               ...counsellor.professionalInfo,
               title: e.target.value
             })}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="e.g. Licensed Therapist"
           />
         </div>
 
         {/* Years of Experience */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Years of Experience
           </label>
           <input
@@ -121,22 +121,24 @@ export default function ProfessionalInfo({
                 });
               }
             }}
-            className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            className="mt-1 block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="e.g. 5"
           />
           {(counsellor.professionalInfo?.yearsOfExperience || 0) > 99 && (
-            <p className="text-red-500 text-sm mt-1">Years of experience must be less than 100</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">Years of experience must be less than 100</p>
           )}
           {(counsellor.professionalInfo?.yearsOfExperience || 0) <= 0 && (
-            <p className="text-red-500 text-sm mt-1">Years of experience must be greater than 0</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">Years of experience must be greater than 0</p>
           )}
         </div>
       </div>
 
       {/* Education Section */}
       <div className="mt-6">
-        <h3 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
-          Education
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-3">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-700">
+            Education
+          </h3>
           {(counsellor.professionalInfo?.education?.length || 0) < maxEntries && (
             <button
               onClick={() =>
@@ -147,75 +149,83 @@ export default function ProfessionalInfo({
                   year: new Date().getFullYear(),
                 })
               }
-              className="text-indigo-600 hover:text-indigo-800 transition flex items-center"
+              className="self-start sm:self-auto text-indigo-600 hover:text-indigo-800 transition flex items-center text-sm sm:text-base"
             >
-              <IoAddCircleOutline className="mr-1" size={20} />
-              Add
+              <IoAddCircleOutline className="mr-1" size={18} />
+              Add Education
             </button>
           )}
-        </h3>
+        </div>
 
         {!counsellor.professionalInfo?.education?.length && (
           <p className="text-gray-500 text-sm mt-2">No education added.</p>
         )}
 
-        {counsellor.professionalInfo?.education?.map((edu, index) => (
-          <div
-            key={index}
-            className="bg-gray-100 p-4 rounded-lg mt-3 flex flex-col sm:flex-row items-center sm:items-start"
-          >
-            <div className="flex-1">
-              <input
-                type="text"
-                value={edu.degree}
-                onChange={(e) =>
-                  updateEducation(index, { degree: e.target.value })
-                }
-                className="block w-full px-4 py-2 mb-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Degree (e.g. BSc in Psychology)"
-              />
-              <input
-                type="text"
-                value={edu.field}
-                onChange={(e) =>
-                  updateEducation(index, { field: e.target.value })
-                }
-                className="block w-full px-4 py-2 mb-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Field of Study"
-              />
-              <input
-                type="text"
-                value={edu.institution}
-                onChange={(e) =>
-                  updateEducation(index, { institution: e.target.value })
-                }
-                className="block w-full px-4 py-2 mb-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Institution Name"
-              />
-              <input
-                type="number"
-                value={edu.year}
-                onChange={(e) => {
-                  updateEducation(index, { year: parseInt(e.target.value.replace(/^0+/, '')) || 0 });
-                }}
-                className="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Year (YYYY)"
-              />
-            </div>
-            <button
-              onClick={() => deleteEducation(index)}
-              className="ml-4 text-red-600 hover:text-red-800 transition"
+        <div className="space-y-3 sm:space-y-4">
+          {counsellor.professionalInfo?.education?.map((edu, index) => (
+            <div
+              key={index}
+              className="bg-gray-100 p-3 sm:p-4 rounded-lg"
             >
-              <IoTrash size={24} />
-            </button>
-          </div>
-        ))}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 space-y-3">
+                  <input
+                    type="text"
+                    value={edu.degree}
+                    onChange={(e) =>
+                      updateEducation(index, { degree: e.target.value })
+                    }
+                    className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Degree (e.g. BSc in Psychology)"
+                  />
+                  <input
+                    type="text"
+                    value={edu.field}
+                    onChange={(e) =>
+                      updateEducation(index, { field: e.target.value })
+                    }
+                    className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Field of Study"
+                  />
+                  <input
+                    type="text"
+                    value={edu.institution}
+                    onChange={(e) =>
+                      updateEducation(index, { institution: e.target.value })
+                    }
+                    className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Institution Name"
+                  />
+                  <input
+                    type="number"
+                    value={edu.year}
+                    onChange={(e) => {
+                      updateEducation(index, { year: parseInt(e.target.value.replace(/^0+/, '')) || 0 });
+                    }}
+                    className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Year (YYYY)"
+                  />
+                </div>
+                <div className="flex sm:flex-col justify-end sm:justify-start">
+                  <button
+                    onClick={() => deleteEducation(index)}
+                    className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition"
+                  >
+                    <IoTrash size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* License Section */}
       <div className="mt-6">
-        <h3 className="text-lg font-semibold text-gray-700 flex justify-between items-center">
-          Licenses
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-3">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-700">
+            Licenses
+          </h3>
           {(counsellor.professionalInfo?.licenses?.length || 0) < maxEntries && (
             <button
               onClick={() =>
@@ -226,73 +236,81 @@ export default function ProfessionalInfo({
                   validUntil: "",
                 })
               }
-              className="text-indigo-600 hover:text-indigo-800 transition flex items-center"
+              className="self-start sm:self-auto text-indigo-600 hover:text-indigo-800 transition flex items-center text-sm sm:text-base"
             >
-              <IoAddCircleOutline className="mr-1" size={20} />
-              Add
+              <IoAddCircleOutline className="mr-1" size={18} />
+              Add License
             </button>
           )}
-        </h3>
+        </div>
 
         {!counsellor.professionalInfo?.licenses?.length && (
           <p className="text-gray-500 text-sm mt-2">No licenses added.</p>
         )}
 
-        {counsellor.professionalInfo?.licenses?.map((lic, index) => (
-          <div
-            key={index}
-            className="bg-gray-100 p-4 rounded-lg mt-3 flex flex-col sm:flex-row items-center sm:items-start"
-          >
-            <div className="flex-1">
-              <input
-                type="text"
-                value={lic.type}
-                onChange={(e) => updateLicense(index, { type: e.target.value })}
-                className="block w-full px-4 py-2 mb-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="License Type"
-              />
-              <input
-                type="text"
-                value={lic.licenseNumber}
-                onChange={(e) =>
-                  updateLicense(index, { licenseNumber: e.target.value })
-                }
-                className="block w-full px-4 py-2 mb-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="License Number"
-              />
-              <input
-                type="text"
-                value={lic.issuingAuthority}
-                onChange={(e) =>
-                  updateLicense(index, { issuingAuthority: e.target.value })
-                }
-                className="block w-full px-4 py-2 mb-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Issuing Authority"
-              />
-              <input
-                type="date"
-                value={lic.validUntil}
-                min={new Date().toISOString().split('T')[0]}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (!value || validateLicenseDate(value)) {
-                    updateLicense(index, { validUntil: value });
-                  }
-                }}
-                className="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              />
-              {lic.validUntil && !validateLicenseDate(lic.validUntil) && (
-                <p className="text-red-500 text-sm mt-1">License expiry date must be in the future</p>
-              )}
-            </div>
-            <button
-              onClick={() => deleteLicense(index)}
-              className="ml-4 text-red-600 hover:text-red-800 transition"
+        <div className="space-y-3 sm:space-y-4">
+          {counsellor.professionalInfo?.licenses?.map((lic, index) => (
+            <div
+              key={index}
+              className="bg-gray-100 p-3 sm:p-4 rounded-lg"
             >
-              <IoTrash size={24} />
-            </button>
-          </div>
-        ))}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 space-y-3">
+                  <input
+                    type="text"
+                    value={lic.type}
+                    onChange={(e) => updateLicense(index, { type: e.target.value })}
+                    className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="License Type"
+                  />
+                  <input
+                    type="text"
+                    value={lic.licenseNumber}
+                    onChange={(e) =>
+                      updateLicense(index, { licenseNumber: e.target.value })
+                    }
+                    className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="License Number"
+                  />
+                  <input
+                    type="text"
+                    value={lic.issuingAuthority}
+                    onChange={(e) =>
+                      updateLicense(index, { issuingAuthority: e.target.value })
+                    }
+                    className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Issuing Authority"
+                  />
+                  <div>
+                    <input
+                      type="date"
+                      value={lic.validUntil}
+                      min={new Date().toISOString().split('T')[0]}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (!value || validateLicenseDate(value)) {
+                          updateLicense(index, { validUntil: value });
+                        }
+                      }}
+                      className="block w-full px-3 sm:px-4 py-2 text-sm sm:text-base border rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                    {lic.validUntil && !validateLicenseDate(lic.validUntil) && (
+                      <p className="text-red-500 text-xs sm:text-sm mt-1">License expiry date must be in the future</p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex sm:flex-col justify-end sm:justify-start">
+                  <button
+                    onClick={() => deleteLicense(index)}
+                    className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition"
+                  >
+                    <IoTrash size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
