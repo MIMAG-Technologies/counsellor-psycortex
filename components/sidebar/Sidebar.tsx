@@ -9,7 +9,8 @@ import {
   FaCalendarAlt,
   FaClock,
   FaUser,
-  FaSignOutAlt
+  FaSignOutAlt,
+  FaUserEdit
 } from "react-icons/fa";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
@@ -24,7 +25,8 @@ const routes: Route[] = [
   { path: "/dashboard", label: "Dashboard", icon: <FaHome /> },
   { path: "/sessions", label: "Sessions", icon: <FaCalendarAlt /> },
   { path: "/schedule", label: "Schedule", icon: <FaClock /> },
-  { path: "/profile", label: "Profile", icon: <FaUser /> }
+  { path: "/profile", label: "Profile", icon: <FaUser /> },
+  { path: "/edit-profile", label: "Edit Profile", icon: <FaUserEdit /> }
 ];
 
 const Sidebar = () => {
@@ -65,14 +67,14 @@ const Sidebar = () => {
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 bg-black/50 z-10"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`
           fixed top-0 left-0 h-full bg-white shadow-lg z-20
           transition-all duration-300 ease-in-out
@@ -81,8 +83,8 @@ const Sidebar = () => {
       >
         <div className="p-4">
           {/* Toggle button */}
-          <button 
-            onClick={() => setIsOpen(!isOpen)} 
+          <button
+            onClick={() => setIsOpen(!isOpen)}
             className="text-indigo-500 hover:text-indigo-600 transition-colors mb-6 w-full flex justify-center md:justify-start"
             aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
           >
@@ -92,7 +94,7 @@ const Sidebar = () => {
           {/* Navigation */}
           <nav className="flex flex-col gap-2">
             {routes.map((route) => (
-              <SidebarItem 
+              <SidebarItem
                 key={route.path}
                 icon={route.icon}
                 label={route.label}
@@ -101,7 +103,7 @@ const Sidebar = () => {
                 isActive={pathname === route.path}
               />
             ))}
-            
+
             {/* Logout button */}
             <div className="mt-auto pt-4 border-t border-gray-100">
               <button
@@ -146,12 +148,12 @@ interface SidebarItemProps {
   isActive: boolean;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ 
-  icon, 
-  label, 
-  isOpen, 
+const SidebarItem: React.FC<SidebarItemProps> = ({
+  icon,
+  label,
+  isOpen,
   route,
-  isActive 
+  isActive
 }) => {
   const router = useRouter();
 
@@ -160,11 +162,11 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       className={`
         flex items-center gap-4 p-3 rounded-lg cursor-pointer
         transition-colors
-        ${isActive 
-          ? "bg-indigo-50 text-indigo-600" 
+        ${isActive
+          ? "bg-indigo-50 text-indigo-600"
           : "hover:bg-gray-100 text-gray-700 hover:text-indigo-600"}
       `}
-      onClick={() => router.push(route)} 
+      onClick={() => router.push(route)}
     >
       <span className="text-xl flex-shrink-0">
         {icon}

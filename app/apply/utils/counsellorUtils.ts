@@ -221,7 +221,7 @@ export const updateProfilePic = async (
   try {
     const formData = new FormData();
     formData.append("ID", counsellorId);
-    formData.append("Image", imageFile);
+    formData.append("file", imageFile);
 
     await axios.post(
       `${base_url}/counsellor/update_profile_pic.php`,
