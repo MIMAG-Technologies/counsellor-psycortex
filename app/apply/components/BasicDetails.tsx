@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getFilters, updateProfilePic } from "@/app/apply/utils/counsellorUtils";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "react-toastify";
-import { IoCamera, IoCheckmark, IoClose } from "react-icons/io5";
+import { IoCamera, IoClose } from "react-icons/io5";
 
 export default function BasicDetails({
   counsellor,
@@ -17,9 +17,6 @@ export default function BasicDetails({
   const { me } = useAuth();
   type Filter = { id: number; name: string; priority: number };
   const [genders, setGenders] = useState<Filter[]>([]);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
   const fetchFilters = async () => {
     const filters = await getFilters();
     setGenders(
@@ -33,71 +30,6 @@ export default function BasicDetails({
     fetchFilters();
   }, []);
 
-  // Set image preview when counsellor data loads
-  useEffect(() => {
-    if (counsellor.basicInfo?.profileImage && !imagePreview) {
-      setImagePreview(counsellor.basicInfo.profileImage);
-    }
-  }, [counsellor.basicInfo?.profileImage]);
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast.error('Please select a valid image file');
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image size should be less than 5MB');
-      return;
-    }
-
-    if (!me?.id) {
-      toast.error('User ID not found. Please try again.');
-      return;
-    }
-
-    try {
-      setIsUploadingImage(true);
-
-      // Create preview
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-
-      // Upload image
-      const success = await updateProfilePic(me.id, file);
-
-      if (success) {
-        // Update the counsellor data with new image URL
-        updateCounsellor("basicInfo", {
-          ...counsellor.basicInfo,
-          profileImage: previewUrl // You might want to use a proper URL from the API response
-        });
-        toast.success('Profile picture updated successfully!');
-      } else {
-        toast.error('Failed to upload image. Please try again.');
-        setImagePreview(null);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      toast.error('Failed to upload image. Please try again.');
-      setImagePreview(null);
-    } finally {
-      setIsUploadingImage(false);
-    }
-  };
-
-  const removeImage = () => {
-    setImagePreview(null);
-    updateCounsellor("basicInfo", {
-      ...counsellor.basicInfo,
-      profileImage: ''
-    });
-  };
 
   return (
     <div className="mx-auto p-4 sm:p-6 bg-white rounded-lg">
@@ -189,72 +121,6 @@ export default function BasicDetails({
               );
             })}
           </select>
-        </div>
-
-        {/* Profile Image */}
-        <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Profile Image
-          </label>
-          <div className="flex flex-col sm:flex-row items-start gap-4">
-            {/* Image Preview */}
-            <div className="relative">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
-                {imagePreview || counsellor.basicInfo?.profileImage ? (
-                  <img
-                    src={imagePreview || counsellor.basicInfo?.profileImage}
-                    alt="Profile preview"
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                ) : (
-                  <IoCamera className="w-8 h-8 text-gray-400" />
-                )}
-
-                {/* Loading overlay */}
-                {isUploadingImage && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                  </div>
-                )}
-              </div>
-
-              {/* Remove button */}
-              {(imagePreview || counsellor.basicInfo?.profileImage) && !isUploadingImage && (
-                <button
-                  onClick={removeImage}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                  type="button"
-                >
-                  <IoClose className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-
-            {/* Upload controls */}
-            <div className="flex-1">
-              <div className="space-y-2">
-                <label className="cursor-pointer">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    disabled={isUploadingImage}
-                    className="hidden"
-                  />
-                  <div className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium transition-colors ${isUploadingImage
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 cursor-pointer'
-                    }`}>
-                    <IoCamera className="w-4 h-4 mr-2" />
-                    {isUploadingImage ? 'Uploading...' : 'Choose Image'}
-                  </div>
-                </label>
-                <p className="text-xs text-gray-500">
-                  JPG, PNG or GIF (max 5MB)
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Biography */}
