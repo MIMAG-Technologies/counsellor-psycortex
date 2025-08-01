@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { counsellor } from '@/app/apply/utils/counsellorTypes';
 import BasicDetails from '@/app/apply/components/BasicDetails';
 import ProfessionalInfo from '@/app/apply/components/ProfessionalInfo';
@@ -12,14 +12,16 @@ import { toast } from 'react-toastify';
 import { getCounsellor, updatePersonalInfo, updateProfessionalInfo, updatePricing, updateCommunicationModes, updateSchedule, updateLanguages, updateSpecialties, UpdateBranches } from '@/app/apply/utils/counsellorUtils';
 import { useAuth } from '@/context/AuthContext';
 import { IoSave, IoRefresh } from 'react-icons/io5';
+import { useSearchParams } from 'next/navigation';
 
-export default function EditProfile() {
+export default function EditProfilePage() {
     const { me } = useAuth();
+    const searchParams = useSearchParams();
+    const initialTab = searchParams.get('tab') || 'basicInfo';
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [hasChanges, setHasChanges] = useState(false);
-    const [activeTab, setActiveTab] = useState('basicInfo');
 
     const [formData, setFormData] = useState<Partial<counsellor>>({
         basicInfo: {
@@ -60,6 +62,10 @@ export default function EditProfile() {
         languages: [],
         specialties: [],
     });
+    const [activeTab, setActiveTab] = useState(initialTab);
+    useEffect(() => {
+        window.history.replaceState({}, '', `/edit-profile?tab=${activeTab}`);
+    }, [activeTab]);
 
     const [originalData, setOriginalData] = useState<Partial<counsellor>>({});
 
@@ -456,8 +462,8 @@ export default function EditProfile() {
                             )}
                             <button
                                 onClick={handleSave}
-                                disabled={!hasChanges || isLoading}
-                                className={`flex items-center px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${hasChanges && !isLoading
+                                disabled={!hasChanges || isLoading || activeTab === 'profileImage'}
+                                className={`flex items-center px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${hasChanges && !isLoading && activeTab !== 'profileImage'
                                     ? 'bg-primary text-white hover:bg-secondary'
                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                     }`}
@@ -535,4 +541,12 @@ export default function EditProfile() {
             </div>
         </div>
     );
+}
+
+export const EditProfile = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <EditProfilePage />
+        </Suspense>
+    )
 }
