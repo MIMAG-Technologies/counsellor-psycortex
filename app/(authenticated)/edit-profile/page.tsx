@@ -7,6 +7,7 @@ import ProfessionalInfo from '@/app/apply/components/ProfessionalInfo';
 import ModeAndPricing from '@/app/apply/components/ModeAndPricing';
 import Schedule from '@/app/apply/components/Schedule';
 import SpecialitiesAndLanguages from '@/app/apply/components/SpecialitiesAndLanguages';
+import ProfileImageUpdate from '@/app/apply/components/ProfileImageUpdate';
 import { toast } from 'react-toastify';
 import { getCounsellor, updatePersonalInfo, updateProfessionalInfo, updatePricing, updateCommunicationModes, updateSchedule, updateLanguages, updateSpecialties, UpdateBranches } from '@/app/apply/utils/counsellorUtils';
 import { useAuth } from '@/context/AuthContext';
@@ -382,6 +383,13 @@ export default function EditProfile() {
                         updateCounsellor={updateFormData}
                     />
                 );
+            case 'profileImage':
+                return (
+                    <ProfileImageUpdate
+                        counsellor={formData}
+                        updateCounsellor={updateFormData}
+                    />
+                );
             default:
                 return null;
         }
@@ -421,7 +429,8 @@ export default function EditProfile() {
         { id: 'professionalInfo', label: 'Professional', shortLabel: 'Professional', icon: '🎓' },
         { id: 'modeAndPricing', label: 'Services & Pricing', shortLabel: 'Services', icon: '💰' },
         { id: 'schedule', label: 'Schedule', shortLabel: 'Schedule', icon: '📅' },
-        { id: 'specialitiesAndLanguages', label: 'Skills & Languages', shortLabel: 'Skills', icon: '🗣️' }
+        { id: 'specialitiesAndLanguages', label: 'Skills & Languages', shortLabel: 'Skills', icon: '🗣️' },
+        { id: 'profileImage', label: 'Profile Image', shortLabel: 'Profile', icon: '🖼️' }
     ];
 
     return (
