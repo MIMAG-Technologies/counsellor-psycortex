@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
- 
+
 "use client";
 
 import { useState } from "react";
@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  sendEmailVerification,
+  // sendPasswordResetEmail,
+  // sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { toast } from "react-toastify";
@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  // const [isResettingPassword, setIsResettingPassword] = useState(false);
   const router = useRouter();
 
   // Handle login with email and password
@@ -39,22 +39,22 @@ const Login = () => {
   };
 
   // Handle password reset
-  const handleForgotPassword = async () => {
-    if (!email) {
-      toast.error("Please enter your email to reset the password.");
-      return;
-    }
+  // const handleForgotPassword = async () => {
+  //   if (!email) {
+  //     toast.error("Please enter your email to reset the password.");
+  //     return;
+  //   }
 
-    try {
-      await sendPasswordResetEmail(auth, email);
-      toast.success(
-        "Password reset email sent! Please check your inbox or spam folder."
-      );
-      setIsResettingPassword(false);
-    } catch (error: any) {
-      toast.error("Error sending password reset email: " + error.message);
-    }
-  };
+  //   try {
+  //     await sendPasswordResetEmail(auth, email);
+  //     toast.success(
+  //       "Password reset email sent! Please check your inbox or spam folder."
+  //     );
+  //     setIsResettingPassword(false);
+  //   } catch (error: any) {
+  //     toast.error("Error sending password reset email: " + error.message);
+  //   }
+  // };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -71,18 +71,18 @@ const Login = () => {
           className="text-center text-white px-12 z-10"
         >
           <motion.img
-        initial={{ scale: 0.8 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 0.5 }}
-        src="https://psycortex.in/assets/Images/thebraintakeLogo.png"
-        alt="Psycortex Logo"
-        className="h-20 mx-auto mb-8 drop-shadow-xl hover:scale-105 transition-transform duration-300"
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+            src="https://psycortex.in/assets/Images/thebraintakeLogo.png"
+            alt="Psycortex Logo"
+            className="h-20 mx-auto mb-8 drop-shadow-xl hover:scale-105 transition-transform duration-300"
           />
           <h1 className="text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-200">
-        Welcome Back
+            Welcome Back
           </h1>
           <p className="text-lg text-gray-100 mt-4 leading-relaxed font-light">
-        Login to manage and support your clients with ease and professionalism.
+            Login to manage and support your clients with ease and professionalism.
           </p>
         </motion.div>
       </div>
@@ -130,7 +130,7 @@ const Login = () => {
             </div>
 
             {/* Forgot Password */}
-            <div className="text-right mb-4">
+            {/* <div className="text-right mb-4">
               <button
                 type="button"
                 onClick={handleForgotPassword}
@@ -138,7 +138,7 @@ const Login = () => {
               >
                 Forgot Password?
               </button>
-            </div>
+            </div> */}
 
             {/* Login Button */}
             <motion.button
